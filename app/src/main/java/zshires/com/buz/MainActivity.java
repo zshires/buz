@@ -168,8 +168,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 }
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                now = addMapMarker(gmap,latitude,longitude,"test");
+                try{
+                    GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+                     now = addMapMarker(gmap,latitude,longitude,"test");
+                } catch (Exception e){
+
+                }
+
+
 
                 //TODO check if this works
                 setLatitude(latitude);
