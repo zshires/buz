@@ -23,20 +23,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import org.w3c.dom.Text;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static MapFragment map;
     TextView textLat;
     TextView textLng;
     private String SERVER_URL = "http://www.herokuapp.com/buz";
-
     private double latitude;
     private double longitude;
+    Marker myMarker;
 
 
     private void setLatitude(double latitude){
@@ -142,22 +143,12 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        /*ArrayList<User> friends = getFriendsNearby();
-        User me = new User(this.latitude,this.longitude);
-
-        for (User friend: friends){
-                if (friend.isInRange(me,10000)) {
-                    double lat = friend.getLatitude();
-                    double lon = friend.getLongitude();
-                    String name = friend.getName();
-                    map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
-                }
-        }*/
+        map.setOnMarkerClickListener(this);
         map.setMyLocationEnabled(true);
     }
 
     public Marker addMapMarker(GoogleMap map, double lat, double lon, String title) {
-        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title));
+        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
     }
 
     public void startLocationService() {
@@ -169,17 +160,21 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //if (marker.equals(myMarker)) {
+            Toast toast = Toast.makeText(getApplicationContext(), "You clicked a marker", Toast.LENGTH_SHORT);
+            toast.show();
+        //}
+        return false;
+    }
+
     class myLocationListener implements LocationListener {
-        Marker now;
         ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
         ArrayList<User> friends = getFriendsNearby();
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                if(now != null){
-                    now.remove();
-                }
-
                 for(Marker dummy : dummyMarkers){
                     if(dummy != null) {
                         dummy.remove(); //remove all the old markers on the map
@@ -190,10 +185,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 double longitude = location.getLongitude();
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                    now = addMapMarker(gmap,latitude,longitude,"me");
+                   // now = addMapMarker(gmap,latitude,longitude,"me");
                     User me = new User(latitude,longitude);
                     for (User friend: friends){
-                        if (friend.isInRange(me,70)) {
+                        if (friend.isInRange(me,500)) {
                             double lat = friend.getLatitude();
                             double lon = friend.getLongitude();
                             String name = friend.getName();
