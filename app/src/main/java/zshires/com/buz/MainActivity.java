@@ -105,6 +105,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             case R.id.action_messages:
                 openMessages();
                 return true;
+            case R.id.action_contacts:
+                openContacts();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -112,6 +115,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     public void openMessages() {
         Intent intent = new Intent(this, MessagesActivity.class);
+        startActivity(intent);
+    }
+    public void openContacts(){
+        Intent intent = new Intent(this, ContactActivity.class);
         startActivity(intent);
     }
 

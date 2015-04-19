@@ -6,5 +6,9 @@
         android:icon="@drawable/envelope_light"
         android:title="Messages"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_contacts"
+        android:icon="@drawable/envelope_light"
+        android:title="Contacts"
+        app:showAsAction="ifRoom" />
 
 </menu>

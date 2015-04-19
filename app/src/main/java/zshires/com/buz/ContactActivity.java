@@ -18,7 +18,7 @@ public class ContactActivity extends ActionBarActivity {
         setContentView(R.layout.activity_contact);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ContactFragment())
                     .commit();
         }
     }
@@ -43,21 +43,5 @@ public class ContactActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.contacts_list_view, container, false);
-            return rootView;
-        }
     }
 }
