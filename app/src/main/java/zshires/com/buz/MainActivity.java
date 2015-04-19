@@ -8,10 +8,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,20 +23,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import org.w3c.dom.Text;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
+public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static MapFragment map;
     TextView textLat;
     TextView textLng;
     private String SERVER_URL = "http://www.herokuapp.com/buz";
-
     private double latitude;
     private double longitude;
+    Marker myMarker;
 
 
     private void setLatitude(double latitude){
@@ -81,10 +84,19 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         ArrayList<User> friends = new ArrayList<User>();
         //getFriendsNearby();
 
-        friends.add(new User(43.055, -89.4701468, 1, "Mike"));
-        friends.add(new User(42.073286, -90.400713, 2, "Geoff"));
-        friends.add(new User(44.073286, -88.400713, 3, "Zak"));
-
+        friends.add(new User(43.055, -89.4701468, 1, "A"));
+        friends.add(new User(42.073286, -90.400713, 2, "B"));
+        friends.add(new User(44.073286, -88.400713, 3, "C"));
+        friends.add(new User(43.059, -89.4711468, 4, "D"));
+        friends.add(new User(43.054, -89.4710468, 5, "E"));
+        friends.add(new User(43.054661, -89.467234, 6, "F"));
+        friends.add(new User(43.053995, -89.467384, 7, "G"));
+        friends.add(new User(43.054164, -89.468038, 8, "H"));
+        friends.add(new User(43.054618, -89.466944, 9, "I"));
+        friends.add(new User(43.055026, -89.466815, 10, "J"));
+        friends.add(new User(43.055026, -89.466815, 11,"K"));
+        friends.add(new User(43.053773, -89.468634, 12, "L"));
+        friends.add(new User(43.054120, -89.466462, 13, "M"));
         return friends;
     }
 
@@ -138,22 +150,12 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        ArrayList<User> friends = getFriendsNearby();
-        User me = new User(this.latitude,this.longitude);
-
-        for (User friend: friends){
-            if (friend.isInRange(me)) {
-                double lat = friend.getLatitude();
-                double lon = friend.getLongitude();
-                String name = friend.getName();
-                map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
-            }
-        }
+        map.setOnMarkerClickListener(this);
         map.setMyLocationEnabled(true);
     }
 
     public Marker addMapMarker(GoogleMap map, double lat, double lon, String title) {
-        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title));
+        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title) .icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker)));
     }
 
     public void startLocationService() {
@@ -165,20 +167,45 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //if (marker.equals(myMarker)) {
+            Toast toast = Toast.makeText(getApplicationContext(), "You clicked a marker", Toast.LENGTH_SHORT);
+            toast.show();
+        //}
+        return false;
+    }
+
     class myLocationListener implements LocationListener {
-        Marker now;
+        ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
+        ArrayList<User> friends = getFriendsNearby();
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                if(now != null){
-                    now.remove();
+                for(Marker dummy : dummyMarkers){
+                    if(dummy != null) {
+                        dummy.remove(); //remove all the old markers on the map
+                    }
                 }
+                dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                now = addMapMarker(gmap,latitude,longitude,"test");
+                try{
+                    GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+                   // now = addMapMarker(gmap,latitude,longitude,"me");
+                    User me = new User(latitude,longitude);
+                    for (User friend: friends){
+                        if (friend.isInRange(me,500)) {
+                            double lat = friend.getLatitude();
+                            double lon = friend.getLongitude();
+                            String name = friend.getName();
+                            dummyMarkers.add(addMapMarker(gmap,lat,lon, name));
+                        }
+                    }
+                } catch (Exception e){
+                    Log.d("ERROR: Exception Thrown", "some error when trying to open the gmap");
+                }
 
-                //TODO check if this works
                 setLatitude(latitude);
                 setLongitude(longitude);
             }
