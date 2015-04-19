@@ -129,8 +129,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         Intent intent = new Intent(this, MessagesActivity.class);
         startActivity(intent);
     }
+
     public void openContacts(){
-        Intent intent = new Intent(this, ContactActivity.class);
+
+        Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
     }
 

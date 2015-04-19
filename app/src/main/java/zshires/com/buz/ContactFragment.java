@@ -1,38 +1,38 @@
 package zshires.com.buz;
 
+
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ContactFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ContactFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by zshires on 4/19/2015.
  */
 public class ContactFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         AdapterView.OnItemClickListener {
+
     /*
-    * Defines an array that contains column names to move from
-    * the Cursor to the ListView.
-    */
+     * Defines an array that contains column names to move from
+     * the Cursor to the ListView.
+     */
     @SuppressLint("InlinedApi")
     private final static String[] FROM_COLUMNS = {
             Build.VERSION.SDK_INT
@@ -61,9 +61,6 @@ public class ContactFragment extends Fragment implements
     // An adapter that binds the result Cursor to the ListView
     private SimpleCursorAdapter mCursorAdapter;
 
-    private OnFragmentInteractionListener mListener;
-
-
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
@@ -90,37 +87,27 @@ public class ContactFragment extends Fragment implements
     private String mSearchString;
     // Defines the array to hold values that replace the ?
     private String[] mSelectionArgs = { mSearchString };
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ContactFragment newInstance() {
-        ContactFragment fragment = new ContactFragment();
-        Bundle args = new Bundle();
 
-        fragment.setArguments(args);
-        return fragment;
-    }
+    // Empty public constructor, required by the system
+    public ContactFragment() {}
 
-    public ContactFragment() {
-        // Required empty public constructor
-    }
-
+    // A UI Fragment must inflate its View
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the fragment layout
+        return inflater.inflate(R.layout.contacts_list_view,//R.layout.contact_list_fragment,
+                container, false);
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        RelativeLayout rl = (RelativeLayout) getActivity().findViewById(R.id.contacts_list_view);
         // Gets the ListView from the View list of the parent activity
         mContactsList =
-                (ListView) getView().findViewById(R.id.list_item);
+                (ListView) rl.getChildAt(1);// getActivity().findViewById(R.id.android:list);
+
         // Gets a CursorAdapter
         mCursorAdapter = new SimpleCursorAdapter(
                 getActivity(),
@@ -129,44 +116,23 @@ public class ContactFragment extends Fragment implements
                 FROM_COLUMNS, TO_IDS,
                 0);
         // Sets the adapter for the ListView
-        mContactsList.setAdapter(mCursorAdapter);
-        // Set the item click listener to be the current fragment.
-        mContactsList.setOnItemClickListener(this);
-        // Initializes the loader
-        getLoaderManager().initLoader(0, null, this);
-    }
 
-    // A UI Fragment must inflate its View
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the fragment layout
-        return inflater.inflate(R.layout.contacts_list_view,
-                container, false);
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            mContactsList.setAdapter(mCursorAdapter);
+            // Set the item click listener to be the current fragment.
+            mContactsList.setOnItemClickListener(this);
+            // Initializes the loader
+            getLoaderManager().initLoader(0, null, this);
+        }catch (Exception e){
+            if(mContactsList == null)
+                Log.d("Error", "Yolo");
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
+
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
@@ -216,20 +182,4 @@ public class ContactFragment extends Fragment implements
          * the details for a contact.
          */
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
 }
