@@ -15,5 +15,4 @@
         android:name="com.google.android.gms.maps.MapFragment"/>
 
 
-
 </RelativeLayout>

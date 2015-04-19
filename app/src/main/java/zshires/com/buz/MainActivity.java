@@ -1,13 +1,19 @@
 package zshires.com.buz;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -55,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final String TAG = "MainActivity";
     private double latitude;
     private double longitude;
+    boolean initialZoom = true;
     Marker myMarker;
 
     private User myUser;
@@ -83,7 +90,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         /*Current Location information*/
         textLat = (TextView) findViewById(R.id.lat);
         textLng = (TextView) findViewById(R.id.lng);
@@ -101,7 +107,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 openMessages();
             }
         });
-        User me = new User(latitude,longitude,1);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        User me = new User(latitude,longitude, prefs.getInt("idPref", 1));
         getFriends(me, new BackendCallback() {
             @Override
             public void onRequestCompleted(Object result) {
@@ -301,6 +308,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
+               /* try{
+                if(initialZoom) {
+                    GoogleMap gmap2 = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+                    gmap2.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+                    gmap2.animateCamera(CameraUpdateFactory.zoomIn());
+                    initialZoom = false;
+                } } catch (Exception e){}
+                */
                 for(Marker dummy : dummyMarkers){
                     if(dummy != null) {
                         dummy.remove(); //remove all the old markers on the map
@@ -325,6 +340,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         Log.e("Error", "Put failure");
                     }
                 });
+                getFriends(myUser, new BackendCallback() {
+                    @Override
+                    public void onRequestCompleted(Object result) {
+                        myUser = (User) result;
+                    }
+
+                    @Override
+                    public void onRequestFailed(String message) {
+                        Log.d("LoadUserError", message);
+                    }
+                });
 
 
                 try{
@@ -333,7 +359,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     //TODO check if needs to be hereUser me = new User(latitude,longitude,1);
                     if (myUser != null && myUser.getFriends() != null){
                         for (User friend: myUser.getFriends()){
-                            if (friend.isInRange(myUser,500)) {
+                            if (friend.isInRange(myUser,150)) {
                                 double lat = friend.getLatitude();
                                 double lon = friend.getLongitude();
                                 String name = friend.getName();

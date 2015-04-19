@@ -2,11 +2,14 @@ package zshires.com.buz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
@@ -33,8 +36,14 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void login(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        try {
+            EditText name = (EditText) findViewById(R.id.username);
+            Integer idPref = Integer.parseInt(name.getText().toString());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            prefs.edit().putInt("idPref", idPref).commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }catch (Exception e){}
     }
 
     public void forgotPassword(View view){

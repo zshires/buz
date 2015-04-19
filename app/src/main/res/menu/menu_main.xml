@@ -5,10 +5,12 @@
     <item android:id="@+id/action_messages"
         android:icon="@drawable/envelope_light"
         android:title="Messages"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
     <item android:id="@+id/action_contacts"
-        android:icon="@drawable/envelope_light"
+        android:icon="@drawable/facesmall"
         android:title="Contacts"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 
 </menu>
