@@ -29,8 +29,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
     public static MapFragment map;
-
-
     TextView textLat;
     TextView textLng;
     private String SERVER_URL = "http://www.herokuapp.com/buz";
@@ -64,41 +62,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-
-    }
-        class myLocationListener implements LocationListener{
-            @Override
-            public void onLocationChanged(Location location) {
-                if(location != null){
-                    double pLong = location.getLongitude();
-                    double pLat = location.getLatitude();
-
-                    //TODO check if this works
-                    setLatitude(pLat);
-                    setLongitude(pLong);
-                    //
-
-                    textLat.setText(Double.toString(pLat));
-                    textLng.setText(Double.toString(pLong));
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        }
-
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
         map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
@@ -168,7 +131,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        friends = getFriendsNearby();
+        ArrayList<User> friends = getFriendsNearby();
         User me = new User(this.latitude,this.longitude);
 
         for (User friend: friends){
@@ -207,6 +170,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 double longitude = location.getLongitude();
                 GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
                 now = addMapMarker(gmap,latitude,longitude,"test");
+
+                //TODO check if this works
+                setLatitude(latitude);
+                setLongitude(longitude);
             }
         }
 
