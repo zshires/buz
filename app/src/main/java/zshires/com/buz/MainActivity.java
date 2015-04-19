@@ -33,7 +33,18 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     TextView textLat;
     TextView textLng;
+    private String SERVER_URL = "http://www.herokuapp.com/buz";
 
+    private double latitude;
+    private double longitude;
+
+
+    private void setLatitude(double latitude){
+        this.latitude = latitude;
+    }
+    private void setLongitude(double longitude){
+        this.longitude = longitude;
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -53,6 +64,40 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+
+    }
+        class myLocationListener implements LocationListener{
+            @Override
+            public void onLocationChanged(Location location) {
+                if(location != null){
+                    double pLong = location.getLongitude();
+                    double pLat = location.getLatitude();
+
+                    //TODO check if this works
+                    setLatitude(pLat);
+                    setLongitude(pLong);
+                    //
+
+                    textLat.setText(Double.toString(pLat));
+                    textLng.setText(Double.toString(pLong));
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        }
 
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
         map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -123,14 +168,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        ArrayList<User> friends = getFriendsNearby();//new ArrayList<User>();
+        friends = getFriendsNearby();
+        User me = new User(this.latitude,this.longitude);
 
-        for (User friend : friends) {
-            double lat = friend.getLatitude();
-            double lon = friend.getLongitude();
-            String name = friend.getName();
-
-            map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
+        for (User friend: friends){
+            if (friend.isInRange(me)) {
+                double lat = friend.getLatitude();
+                double lon = friend.getLongitude();
+                String name = friend.getName();
+                map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
+            }
         }
         map.setMyLocationEnabled(true);
     }
