@@ -144,12 +144,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         AppEventsLogger.deactivateApp(this);
     }
 
-
-    public void onClick_Madison(View v) {
-        // CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(43.073286, -89.400713), 14);
-        //   map.animateCamera(update);
-    }
-
     @Override
     public void onMapReady(GoogleMap map) {
         map.setOnMarkerClickListener(this);
