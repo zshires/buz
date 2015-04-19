@@ -8,10 +8,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -162,7 +164,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     class myLocationListener implements LocationListener {
-        Marker now, dummy;
+        Marker now;
+        ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
         ArrayList<User> friends = getFriendsNearby();
         @Override
         public void onLocationChanged(Location location) {
@@ -170,29 +173,31 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 if(now != null){
                     now.remove();
                 }
-                if (dummy != null){
-                    dummy.remove();
+
+                for(Marker dummy : dummyMarkers){
+                    if(dummy != null) {
+                        dummy.remove(); //remove all the old markers on the map
+                    }
                 }
+                dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                     now = addMapMarker(gmap,latitude,longitude,"me");
+                    now = addMapMarker(gmap,latitude,longitude,"me");
                     User me = new User(latitude,longitude);
                     for (User friend: friends){
                         if (friend.isInRange(me,500)) {
                             double lat = friend.getLatitude();
                             double lon = friend.getLongitude();
                             String name = friend.getName();
-                            dummy = addMapMarker(gmap,lat,lon, name);
+                            dummyMarkers.add(addMapMarker(gmap,lat,lon, name));
                         }
                     }
                 } catch (Exception e){
-
+                    Log.d("ERROR: Exception Thrown", "some error when trying to open the gmap");
                 }
 
-
-                //TODO check if this works
                 setLatitude(latitude);
                 setLongitude(longitude);
             }

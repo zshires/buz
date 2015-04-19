@@ -55,7 +55,6 @@ public class User {
                         Math.sin(dLon/2) * Math.sin(dLon/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c;
-        Log.d("myTag", Double.toString(d*1000));
         return d * 1000; // meters
     }
 
