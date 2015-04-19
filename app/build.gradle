@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.facebook.android:facebook-android-sdk:3.21.1'
     compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'net.callumtaylor:asynchttpclient:1.5'
+
 }

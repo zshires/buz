@@ -2,6 +2,8 @@ package zshires.com.buz;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by Michael on 4/18/2015.
  */
@@ -10,11 +12,16 @@ public class User {
     private double longitude;
     private int id;
     private String name;
+    private User[] friends;
 
+    public int getID(){
+        return this.id;
+    }
+    /*
     public User(double latitude, double longitude){
         this.latitude = latitude;
         this.longitude = longitude;
-    }
+    }*/
     public User(double latitude, double longitude, int id){
         this.latitude = latitude;
         this.longitude = longitude;
@@ -25,6 +32,17 @@ public class User {
         this.longitude = longitude;
         this.id = id;
         this.name = name;
+    }
+    public User(double latitude, double longitude, int id, String name, User[] friends){
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.id = id;
+        this.name = name;
+        this.friends = friends;
+    }
+
+    public User[] getFriends(){
+        return this.friends;
     }
     public double getLongitude(){
         return this.longitude;
