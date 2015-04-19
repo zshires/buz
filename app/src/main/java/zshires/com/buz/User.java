@@ -3,6 +3,7 @@ package zshires.com.buz;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Michael on 4/18/2015.
@@ -11,8 +12,10 @@ public class User {
     private double latitude;
     private double longitude;
     private int id;
-    private String name;
+    private String username;
     private User[] friends;
+    double phonenumber;
+
 
     public int getID(){
         return this.id;
@@ -31,13 +34,14 @@ public class User {
         this.latitude = latitude;
         this.longitude = longitude;
         this.id = id;
-        this.name = name;
+        this.username = name;
     }
+
     public User(double latitude, double longitude, int id, String name, User[] friends){
         this.latitude = latitude;
         this.longitude = longitude;
         this.id = id;
-        this.name = name;
+        this.username = name;
         this.friends = friends;
     }
 
@@ -47,14 +51,24 @@ public class User {
     public double getLongitude(){
         return this.longitude;
     }
+    public void setLatitude(double latitude){
+        this.latitude = latitude;
+    }
+    public void setLongitude(double longitude){
+        this.longitude = longitude;
+    }
     public double getLatitude(){
         return this.latitude;
     }
     public String getName(){
-        return this.name;
+        return this.username;
     }
     public String toString(){
-        String myString = "" + name + " lat: " + latitude + " long: " + longitude;
+
+        String myString = "" + username + " lat: " + latitude + " long: " + longitude + " friends: ";
+        if (friends != null){
+            myString += Arrays.toString(friends);
+        }
         return myString;
     }
 

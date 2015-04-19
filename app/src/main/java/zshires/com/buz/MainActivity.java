@@ -148,8 +148,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         client.get("users/" + me.getID(), null, headers, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
-                JsonArray result = getContent().getAsJsonArray();
-
+                JsonObject result = getContent().getAsJsonObject();
+                //JsonObject array = parser.parse(inputLine).getAsJsonArray();
                 //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
                 /*
                 for (JsonElement element: result) {
@@ -161,6 +161,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 Log.d(TAG, "Load returned: " + result);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 User user = gson.fromJson(result, User.class);
+                Log.d("User:" ,user.toString());
+
                 callback.onRequestCompleted(user);
             }
 
@@ -238,7 +240,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public boolean onMarkerClick(Marker marker) {
         //if (marker.equals(myMarker)) {
-            Toast toast = Toast.makeText(getApplicationContext(), "You clicked a marker", Toast.LENGTH_SHORT);
+            String title = marker.getTitle();
+            Toast toast = Toast.makeText(getApplicationContext(), "Buz " + title + "!", Toast.LENGTH_SHORT);
             toast.show();
         //}
         return false;
@@ -258,6 +261,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
+
+                myUser.setLatitude(latitude);
+                myUser.setLongitude(longitude);
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
                    // now = addMapMarker(gmap,latitude,longitude,"me");
@@ -272,6 +278,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                             }
                         }
                     }
+                    else
+                        Log.e("Null Error", "myUser is null.");
                 } catch (Exception e){
                     Log.d("ERROR: Exception Thrown", "some error when trying to open the gmap");
                 }
