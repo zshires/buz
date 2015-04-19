@@ -22,13 +22,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
-    private MapFragment map;
-    private ArrayList<User> friends;
+    public static MapFragment map;
+
+
     TextView textLat;
     TextView textLng;
 
@@ -43,42 +45,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gps);
+        setContentView(R.layout.activity_main);
+
+        /*Current Location information*/
         textLat = (TextView) findViewById(R.id.lat);
         textLng = (TextView) findViewById(R.id.lng);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-    }
-        class myLocationListener implements LocationListener{
 
-            @Override
-            public void onLocationChanged(Location location) {
-                if(location != null){
-                    double pLong = location.getLongitude();
-                    double pLat = location.getLatitude();
-                    textLat.setText(Double.toString(pLat));
-                    textLng.setText(Double.toString(pLong));
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        }
-
-/*
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
         map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
@@ -91,24 +66,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         });
 
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .build();
-
-
-
     }
-*/
 
-    private ArrayList<User> getFriendsNearby(){
-        User mike = new User(43.073286,-89.400713,1, "Mike");
-        User geoff = new User(42.073286,-90.400713,2, "Geoff");
-        User zak = new User(44.073286,-88.400713,3, "Zak");
-        ArrayList myFriends = new ArrayList<User>();
-        myFriends.add(mike);
-        myFriends.add(geoff);
-        myFriends.add(zak);
+
+    private ArrayList<User> getFriendsNearby() {
+        ArrayList<User> friends = new ArrayList<User>();
+        //getFriendsNearby();
+
+        friends.add(new User(43.073286, -89.400713, 1, "Mike"));
+        friends.add(new User(42.073286, -90.400713, 2, "Geoff"));
+        friends.add(new User(44.073286, -88.400713, 3, "Zak"));
+
         return friends;
     }
 
@@ -134,7 +102,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
     }
 
-    public void openMessages(){
+    public void openMessages() {
         Intent intent = new Intent(this, MessagesActivity.class);
         startActivity(intent);
     }
@@ -148,15 +116,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
 
-    public void onClick_Madison(View v){
-       // CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(43.073286, -89.400713), 14);
-     //   map.animateCamera(update);
+    public void onClick_Madison(View v) {
+        // CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(43.073286, -89.400713), 14);
+        //   map.animateCamera(update);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        friends = getFriendsNearby();
-        for (User friend: friends){
+        ArrayList<User> friends = getFriendsNearby();//new ArrayList<User>();
+
+        for (User friend : friends) {
             double lat = friend.getLatitude();
             double lon = friend.getLongitude();
             String name = friend.getName();
@@ -166,13 +135,48 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         map.setMyLocationEnabled(true);
     }
 
-    public void startLocationService(){
+    public Marker addMapMarker(GoogleMap map, double lat, double lon, String title) {
+        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title));
+    }
+
+    public void startLocationService() {
         Intent i = new Intent(this, LocationService.class);
         startService(i);
     }
 
-    public void stopLocationService(){
+    public void stopLocationService() {
 
+    }
+
+    class myLocationListener implements LocationListener {
+        Marker now;
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                if(now != null){
+                    now.remove();
+                }
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+                now = addMapMarker(gmap,latitude,longitude,"test");
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
     }
 
 }
