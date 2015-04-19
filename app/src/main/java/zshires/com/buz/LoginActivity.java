@@ -52,8 +52,10 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void signUp(View view){
-        Toast toast = Toast.makeText(getApplicationContext(), "FEATURE NOT YET IMPLEMENTED", Toast.LENGTH_SHORT);
-        toast.show();
+        //Toast toast = Toast.makeText(getApplicationContext(), "FEATURE NOT YET IMPLEMENTED", Toast.LENGTH_SHORT);
+        //toast.show();
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
 }

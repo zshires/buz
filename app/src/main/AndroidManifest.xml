@@ -64,12 +64,12 @@
         </service>
 
         <activity
-            android:name=".ContactActivity"
-            android:label="@string/title_activity_contact" >
-        </activity>
-        <activity
             android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts" >
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up" >
         </activity>
     </application>
 
