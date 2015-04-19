@@ -83,13 +83,19 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         ArrayList<User> friends = new ArrayList<User>();
         //getFriendsNearby();
 
-        friends.add(new User(43.055, -89.4701468, 1, "Mike"));
-        friends.add(new User(42.073286, -90.400713, 2, "Geoff"));
-        friends.add(new User(44.073286, -88.400713, 3, "Zak"));
-        friends.add(new User(43.059, -89.4711468, 1, "Mike2"));
-        friends.add(new User(43.054, -89.4710468, 2, "Geoff2"));
-        friends.add(new User(43.059, -89.4710, 3, "Zak2"));
-
+        friends.add(new User(43.055, -89.4701468, 1, "A"));
+        friends.add(new User(42.073286, -90.400713, 2, "B"));
+        friends.add(new User(44.073286, -88.400713, 3, "C"));
+        friends.add(new User(43.059, -89.4711468, 4, "D"));
+        friends.add(new User(43.054, -89.4710468, 5, "E"));
+        friends.add(new User(43.054661, -89.467234, 6, "F"));
+        friends.add(new User(43.053995, -89.467384, 7, "G"));
+        friends.add(new User(43.054164, -89.468038, 8, "H"));
+        friends.add(new User(43.054618, -89.466944, 9, "I"));
+        friends.add(new User(43.055026, -89.466815, 10, "J"));
+        friends.add(new User(43.055026, -89.466815, 11,"K"));
+        friends.add(new User(43.053773, -89.468634, 12, "L"));
+        friends.add(new User(43.054120, -89.466462, 13, "M"));
         return friends;
     }
 
@@ -187,7 +193,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     now = addMapMarker(gmap,latitude,longitude,"me");
                     User me = new User(latitude,longitude);
                     for (User friend: friends){
-                        if (friend.isInRange(me,500)) {
+                        if (friend.isInRange(me,70)) {
                             double lat = friend.getLatitude();
                             double lon = friend.getLongitude();
                             String name = friend.getName();
