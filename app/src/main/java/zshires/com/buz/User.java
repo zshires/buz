@@ -1,5 +1,7 @@
 package zshires.com.buz;
 
+import android.util.Log;
+
 /**
  * Created by Michael on 4/18/2015.
  */
@@ -51,8 +53,9 @@ public class User {
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                         Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c;
+        Log.d("myTag", Double.toString(d*1000));
         return d * 1000; // meters
     }
 

@@ -84,6 +84,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         friends.add(new User(43.055, -89.4701468, 1, "Mike"));
         friends.add(new User(42.073286, -90.400713, 2, "Geoff"));
         friends.add(new User(44.073286, -88.400713, 3, "Zak"));
+        friends.add(new User(43.059, -89.4711468, 1, "Mike2"));
+        friends.add(new User(43.054, -89.4710468, 2, "Geoff2"));
+        friends.add(new User(43.059, -89.4710, 3, "Zak2"));
 
         return friends;
     }
@@ -131,17 +134,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        ArrayList<User> friends = getFriendsNearby();
+        /*ArrayList<User> friends = getFriendsNearby();
         User me = new User(this.latitude,this.longitude);
 
         for (User friend: friends){
-            if (friend.isInRange(me)) {
-                double lat = friend.getLatitude();
-                double lon = friend.getLongitude();
-                String name = friend.getName();
-                map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
-            }
-        }
+                if (friend.isInRange(me,10000)) {
+                    double lat = friend.getLatitude();
+                    double lon = friend.getLongitude();
+                    String name = friend.getName();
+                    map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
+                }
+        }*/
         map.setMyLocationEnabled(true);
     }
 
@@ -159,22 +162,34 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     class myLocationListener implements LocationListener {
-        Marker now;
+        Marker now, dummy;
+        ArrayList<User> friends = getFriendsNearby();
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
                 if(now != null){
                     now.remove();
                 }
+                if (dummy != null){
+                    dummy.remove();
+                }
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                     now = addMapMarker(gmap,latitude,longitude,"test");
+                     now = addMapMarker(gmap,latitude,longitude,"me");
+                    User me = new User(latitude,longitude);
+                    for (User friend: friends){
+                        if (friend.isInRange(me,500)) {
+                            double lat = friend.getLatitude();
+                            double lon = friend.getLongitude();
+                            String name = friend.getName();
+                            dummy = addMapMarker(gmap,lat,lon, name);
+                        }
+                    }
                 } catch (Exception e){
 
                 }
-
 
 
                 //TODO check if this works
