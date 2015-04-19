@@ -1,6 +1,7 @@
 package zshires.com.buz;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -30,14 +31,38 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.w3c.dom.Text;
 import java.util.ArrayList;
 
+
+import android.util.Log;
+import com.google.gson.*;
+import net.callumtaylor.asynchttp.AsyncHttpClient;
+import net.callumtaylor.asynchttp.response.JsonResponseHandler;
+import org.apache.http.Header;
+
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static MapFragment map;
     TextView textLat;
     TextView textLng;
-    private String SERVER_URL = "http://www.herokuapp.com/buz";
+    private String SERVER_URL = "https://still-journey-7705.herokuapp.com/";
+    private static final String TAG = "MainActivity";
     private double latitude;
     private double longitude;
     Marker myMarker;
+
+    private User myUser;
+
+    public interface BackendCallback {
+        public void onRequestCompleted(Object result);
+        public void onRequestFailed(String message);
+    }
 
 
     private void setLatitude(double latitude){
@@ -76,14 +101,26 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 openMessages();
             }
         });
+        User me = new User(latitude,longitude,1);
+        getFriends(me, new BackendCallback() {
+            @Override
+            public void onRequestCompleted(Object result) {
+                myUser = (User) result;
+            }
+
+            @Override
+            public void onRequestFailed(String message) {
+                Log.d("LoadUserError", message);
+            }
+        });
 
     }
 
 
-    private ArrayList<User> getFriendsNearby() {
-        ArrayList<User> friends = new ArrayList<User>();
+    private void getFriends(User me , final BackendCallback callback) {
+        //ArrayList<User> friends = new ArrayList<User>();
         //getFriendsNearby();
-
+        /*
         friends.add(new User(43.055, -89.4701468, 1, "A"));
         friends.add(new User(42.073286, -90.400713, 2, "B"));
         friends.add(new User(44.073286, -88.400713, 3, "C"));
@@ -98,6 +135,41 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         friends.add(new User(43.053773, -89.468634, 12, "L"));
         friends.add(new User(43.054120, -89.466462, 13, "M"));
         return friends;
+        */
+
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+        //headers.add(new BasicHeader("X-USER-ID", Integer.toString(user.backendId)));
+        //headers.add(new BasicHeader("X-AUTHENTICATION-TOKEN", user.authToken));
+
+        client.get("users/" + me.getID(), null, headers, new JsonResponseHandler() {
+            @Override
+            public void onSuccess() {
+                JsonArray result = getContent().getAsJsonArray();
+
+                //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
+                /*
+                for (JsonElement element: result) {
+                    JsonObject casted = element.getAsJsonObject();
+                    casted.addProperty("backendId", casted.get("id").toString());
+                    casted.remove("id");
+                }*/
+
+                Log.d(TAG, "Load returned: " + result);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                User user = gson.fromJson(result, User.class);
+                callback.onRequestCompleted(user);
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+
     }
 
     @Override
@@ -174,7 +246,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     class myLocationListener implements LocationListener {
         ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
-        ArrayList<User> friends = getFriendsNearby();
+
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
@@ -189,13 +261,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
                    // now = addMapMarker(gmap,latitude,longitude,"me");
-                    User me = new User(latitude,longitude);
-                    for (User friend: friends){
-                        if (friend.isInRange(me,500)) {
-                            double lat = friend.getLatitude();
-                            double lon = friend.getLongitude();
-                            String name = friend.getName();
-                            dummyMarkers.add(addMapMarker(gmap,lat,lon, name));
+                    //TODO check if needs to be hereUser me = new User(latitude,longitude,1);
+                    if (myUser != null && myUser.getFriends() != null){
+                        for (User friend: myUser.getFriends()){
+                            if (friend.isInRange(myUser,500)) {
+                                double lat = friend.getLatitude();
+                                double lon = friend.getLongitude();
+                                String name = friend.getName();
+                                dummyMarkers.add(addMapMarker(gmap,lat,lon, name));
+                            }
                         }
                     }
                 } catch (Exception e){
@@ -221,6 +295,32 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         public void onProviderDisabled(String provider) {
 
         }
+    }
+
+    /* Convenience methods */
+    /**
+     * Convenience method for parsing server error responses, since most of the handling is similar.
+     * @param response the raw response from a server failure.
+     * @return a string with an appropriate error message.
+     */
+    private static String handleFailure(JsonElement response) {
+        String errorMessage = "unknown server error";
+
+        if (response == null)
+            return errorMessage;
+
+        JsonObject result = response.getAsJsonObject();
+
+        //Server will return all error messages (except in the case of a crash) as a single level JSON
+        //with one key called "message". This is a convention for this server.
+        try {
+            errorMessage = result.get("message").toString();
+        }
+        catch (Exception e) {
+            Log.d(TAG, "Unable to parse server error message");
+        }
+
+        return errorMessage;
     }
 
 }
