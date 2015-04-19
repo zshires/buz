@@ -148,7 +148,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     public Marker addMapMarker(GoogleMap map, double lat, double lon, String title) {
-        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title) .icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker)));
     }
 
     public void startLocationService() {
