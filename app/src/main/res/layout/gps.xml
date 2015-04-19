@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="30dp"
+        android:layout_height="70dp"
+        android:text="Lat:"
+        android:layout_weight="0.44" />
+    <TextView
+        android:layout_width="30dp"
+        android:layout_height="80dp"
+        android:id="@+id/lat"
+        android:layout_weight="0.15" />
+    <TextView
+        android:layout_width="30dp"
+        android:layout_height="59dp"
+        android:text="Long:"
+        android:layout_weight="0.14" />
+    <TextView
+        android:layout_width="30dp"
+        android:layout_height="70dp"
+        android:id="@+id/lng"
+        android:layout_weight="0.23" />
+
+
+</LinearLayout>

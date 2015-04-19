@@ -1,13 +1,18 @@
 package zshires.com.buz;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
 import com.facebook.AppEventsLogger;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
@@ -19,8 +24,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
     private MapFragment map;
+    TextView textLat;
+    TextView textLng;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -32,7 +42,42 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.gps);
+        textLat = (TextView) findViewById(R.id.lat);
+        textLng = (TextView) findViewById(R.id.lng);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener ll = new myLocationListener();
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+    }
+        class myLocationListener implements LocationListener{
+
+            @Override
+            public void onLocationChanged(Location location) {
+                if(location != null){
+                    double pLong = location.getLongitude();
+                    double pLat = location.getLatitude();
+                    textLat.setText(Double.toString(pLat));
+                    textLng.setText(Double.toString(pLong));
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        }
+
+/*
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
         map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
@@ -50,9 +95,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .addScope(Drive.SCOPE_FILE)
                 .build();
 
-        startLocationService();
-    }
 
+    }
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
