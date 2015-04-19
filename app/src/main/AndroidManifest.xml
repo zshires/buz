@@ -16,6 +16,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -57,10 +58,15 @@
             android:value="AIzaSyBJBq6UPUFXUnEi3k4QFmRinFagswJz004" />
 
         <service
-        android:name=".LocationService"
-        android:enabled="true"
-        android:exported="false" >
-    </service>
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <activity
+            android:name=".ContactsActivity"
+            android:label="@string/title_activity_contacts" >
+        </activity>
     </application>
 
 </manifest>
