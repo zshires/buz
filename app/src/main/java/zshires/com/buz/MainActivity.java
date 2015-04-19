@@ -247,6 +247,54 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         return false;
     }
 
+    public void updateLocation(User me, final BackendCallback callback){
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+        //headers.add(new BasicHeader("X-USER-ID", Integer.toString(user.backendId)));
+        //headers.add(new BasicHeader("X-AUTHENTICATION-TOKEN", user.authToken));
+        StringEntity jsonParams = null;
+        try{
+            JSONObject json = new JSONObject();
+            json.put("latitude", latitude);
+            json.put("longitude", longitude);
+            jsonParams = new StringEntity(json.toString());
+        }catch (Exception e){
+
+        }
+        client.put("users/" + me.getID() + ".json", jsonParams, null, new JsonResponseHandler() {
+            @Override
+            public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+                //JsonObject array = parser.parse(inputLine).getAsJsonArray();
+                //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
+                /*
+                for (JsonElement element: result) {
+                    JsonObject casted = element.getAsJsonObject();
+                    casted.addProperty("backendId", casted.get("id").toString());
+                    casted.remove("id");
+                }*/
+
+                Log.d(TAG, "Load returned: " + result);
+
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                User user = gson.fromJson(result, User.class);
+                Log.d("User:" ,user.toString());
+
+                callback.onRequestCompleted(user);
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+
+    }
+
+
     class myLocationListener implements LocationListener {
         ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
 
@@ -264,6 +312,21 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                 myUser.setLatitude(latitude);
                 myUser.setLongitude(longitude);
+
+                //Push to server "me"
+                updateLocation(myUser, new BackendCallback() {
+                    @Override
+                    public void onRequestCompleted(Object result) {
+                        Log.d("Put", "Success");
+                    }
+
+                    @Override
+                    public void onRequestFailed(String message) {
+                        Log.e("Error", "Put failure");
+                    }
+                });
+
+
                 try{
                     GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
                    // now = addMapMarker(gmap,latitude,longitude,"me");
