@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         ArrayList<User> friends = new ArrayList<User>();
         //getFriendsNearby();
 
-        friends.add(new User(43.073286, -89.400713, 1, "Mike"));
+        friends.add(new User(43.055, -89.4701468, 1, "Mike"));
         friends.add(new User(42.073286, -90.400713, 2, "Geoff"));
         friends.add(new User(44.073286, -88.400713, 3, "Zak"));
 
