@@ -20,8 +20,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback {
     private MapFragment map;
+    private ArrayList<User> friends;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -52,6 +56,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .build();
 
         startLocationService();
+    }
+
+    private ArrayList<User> getFriendsNearby(){
+        User mike = new User(43.073286,-89.400713,1, "Mike");
+        User geoff = new User(42.073286,-90.400713,2, "Geoff");
+        User zak = new User(44.073286,-88.400713,3, "Zak");
+        ArrayList myFriends = new ArrayList<User>();
+        myFriends.add(mike);
+        myFriends.add(geoff);
+        myFriends.add(zak);
+        return friends;
     }
 
     @Override
@@ -97,7 +112,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(new LatLng(43.073286, -89.400713)).title("Madison"));
+        friends = getFriendsNearby();
+        for (User friend: friends){
+            double lat = friend.getLatitude();
+            double lon = friend.getLongitude();
+            String name = friend.getName();
+
+            map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(name));
+        }
         map.setMyLocationEnabled(true);
     }
 
