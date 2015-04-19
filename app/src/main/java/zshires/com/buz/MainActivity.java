@@ -1,5 +1,4 @@
 package zshires.com.buz;
-/* Hey Geoff */
 
 import android.app.Activity;
 import android.content.Intent;
