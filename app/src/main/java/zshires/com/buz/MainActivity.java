@@ -1,44 +1,36 @@
 package zshires.com.buz;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 
-import android.util.Log;
 import com.google.gson.*;
 import net.callumtaylor.asynchttp.AsyncHttpClient;
 import net.callumtaylor.asynchttp.response.JsonResponseHandler;
@@ -48,40 +40,25 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static MapFragment map;
-    TextView textLat;
-    TextView textLng;
+    public GoogleMap gmap;
     private String SERVER_URL = "https://still-journey-7705.herokuapp.com/";
     private static final String TAG = "MainActivity";
-    private double latitude;
-    private double longitude;
-    boolean initialZoom = true;
-    Marker myMarker;
-
-    private User myUser;
+    private final int RANGE = 60; //Distance in meters that controls how far you can see your friends
+    private User currUser;
+    Circle mapCircle;
 
     public interface BackendCallback {
         public void onRequestCompleted(Object result);
         public void onRequestFailed(String message);
     }
 
-
-    private void setLatitude(double latitude){
-        this.latitude = latitude;
-    }
-    private void setLongitude(double longitude){
-        this.longitude = longitude;
-    }
     @Override
     protected void onResume() {
         super.onResume();
-
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
     }
@@ -90,29 +67,39 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*Current Location information*/
-        textLat = (TextView) findViewById(R.id.lat);
-        textLng = (TextView) findViewById(R.id.lng);
+        currUser = new User(0,0,0);
+        currUser.addFriend((new User(43.068762, -89.408195, 1, "A")));
+        currUser.addFriend((new User(43.068619, -89.408314, 2, "B")));
+        currUser.addFriend((new User(43.068873, -89.408581, 3, "C")));
+        currUser.addFriend((new User(43.068317, -89.408142, 4, "D")));
+
+        /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, ll);
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
+
+        /* Grab the map and initialize */
         map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
-        //other options: replace 'this' with Your_View.getContext(),Your_Activity_Name.this
-        //or getApplicationContext()
+        gmap  = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+
+        /* Swipe Listener */
         view.setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeLeft() {
                 openMessages();
             }
         });
+
+        /* Initialize our user*/
+        /* Populate friends from backend
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        User me = new User(latitude,longitude, prefs.getInt("idPref", 1));
-        getFriends(me, new BackendCallback() {
+        currUser = new User(latitude,longitude, prefs.getInt("idPref", 1));
+        getFriends(currUser, new BackendCallback() {
             @Override
             public void onRequestCompleted(Object result) {
-                myUser = (User) result;
+                currUser = (User) result;
             }
 
             @Override
@@ -120,30 +107,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 Log.d("LoadUserError", message);
             }
         });
-
+        */
     }
 
-
     private void getFriends(User me , final BackendCallback callback) {
-        //ArrayList<User> friends = new ArrayList<User>();
-        //getFriendsNearby();
-        /*
-        friends.add(new User(43.055, -89.4701468, 1, "A"));
-        friends.add(new User(42.073286, -90.400713, 2, "B"));
-        friends.add(new User(44.073286, -88.400713, 3, "C"));
-        friends.add(new User(43.059, -89.4711468, 4, "D"));
-        friends.add(new User(43.054, -89.4710468, 5, "E"));
-        friends.add(new User(43.054661, -89.467234, 6, "F"));
-        friends.add(new User(43.053995, -89.467384, 7, "G"));
-        friends.add(new User(43.054164, -89.468038, 8, "H"));
-        friends.add(new User(43.054618, -89.466944, 9, "I"));
-        friends.add(new User(43.055026, -89.466815, 10, "J"));
-        friends.add(new User(43.055026, -89.466815, 11,"K"));
-        friends.add(new User(43.053773, -89.468634, 12, "L"));
-        friends.add(new User(43.054120, -89.466462, 13, "M"));
-        return friends;
-        */
-
+        /* Backend call to get friends
         AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
 
         List<Header> headers = new ArrayList<Header>();
@@ -158,12 +126,12 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 JsonObject result = getContent().getAsJsonObject();
                 //JsonObject array = parser.parse(inputLine).getAsJsonArray();
                 //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
-                /*
-                for (JsonElement element: result) {
-                    JsonObject casted = element.getAsJsonObject();
-                    casted.addProperty("backendId", casted.get("id").toString());
-                    casted.remove("id");
-                }*/
+
+               // for (JsonElement element: result) {
+               //     JsonObject casted = element.getAsJsonObject();
+               //     casted.addProperty("backendId", casted.get("id").toString());
+               //     casted.remove("id");
+               // }
 
                 Log.d(TAG, "Load returned: " + result);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
@@ -178,7 +146,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 callback.onRequestFailed(handleFailure(getContent()));
             }
         });
-
+        */
     }
 
     @Override
@@ -220,7 +188,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
-
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
     }
@@ -229,10 +196,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap map) {
         map.setOnMarkerClickListener(this);
         map.setMyLocationEnabled(true);
+        map.getUiSettings().setScrollGesturesEnabled(false);
+        map.getUiSettings().setZoomGesturesEnabled(false);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
     public Marker addMapMarker(GoogleMap map, double lat, double lon, String title) {
-        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title) .icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker)));
+        return map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker)));
     }
 
     public void startLocationService() {
@@ -246,17 +216,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        //if (marker.equals(myMarker)) {
             String title = marker.getTitle();
             Toast toast = Toast.makeText(getApplicationContext(), "Buz " + title + "!", Toast.LENGTH_SHORT);
             toast.show();
-        //}
         return false;
     }
 
     public void updateLocation(User me, final BackendCallback callback){
         AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
-
         List<Header> headers = new ArrayList<Header>();
         headers.add(new BasicHeader("Accept", "application/json"));
         headers.add(new BasicHeader("Content-Type", "application/json"));
@@ -265,11 +232,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         StringEntity jsonParams = null;
         try{
             JSONObject json = new JSONObject();
-            json.put("latitude", latitude);
-            json.put("longitude", longitude);
+            json.put("latitude", currUser.getLatitude());
+            json.put("longitude", currUser.getLongitude());
             jsonParams = new StringEntity(json.toString());
         }catch (Exception e){
-
+            Log.d("Error:" ,"Exception thrown in updateLocation");
         }
         client.put("users/" + me.getID() + ".json", jsonParams, null, new JsonResponseHandler() {
             @Override
@@ -308,10 +275,19 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
+                /* Update coordinates for our user */
+                currUser.setLatitude(location.getLatitude());
+                currUser.setLongitude(location.getLongitude());
+                LatLng loc = new LatLng(currUser.getLatitude(), currUser.getLongitude());
+                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 18)); // have the map follow the user as they move
+                if(mapCircle != null){
+                    mapCircle.remove(); // clear the old circles on the map
+                }
+                mapCircle = gmap.addCircle(new CircleOptions().center(loc).radius(RANGE).strokeColor(Color.YELLOW).strokeWidth(4).visible(true));
                /* try{
                 if(initialZoom) {
                     GoogleMap gmap2 = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                    gmap2.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+                    gmap2.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
                     gmap2.animateCamera(CameraUpdateFactory.zoomIn());
                     initialZoom = false;
                 } } catch (Exception e){}
@@ -322,14 +298,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     }
                 }
                 dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-
-                myUser.setLatitude(latitude);
-                myUser.setLongitude(longitude);
-
                 //Push to server "me"
-                updateLocation(myUser, new BackendCallback() {
+                /*
+                updateLocation(currUser, new BackendCallback() {
                     @Override
                     public void onRequestCompleted(Object result) {
                         Log.d("Put", "Success");
@@ -340,10 +311,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         Log.e("Error", "Put failure");
                     }
                 });
-                getFriends(myUser, new BackendCallback() {
+                getFriends(currUser, new BackendCallback() {
                     @Override
                     public void onRequestCompleted(Object result) {
-                        myUser = (User) result;
+                        currUser = (User) result;
                     }
 
                     @Override
@@ -351,30 +322,20 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         Log.d("LoadUserError", message);
                     }
                 });
-
-
-                try{
-                    GoogleMap gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                   // now = addMapMarker(gmap,latitude,longitude,"me");
+                */
                     //TODO check if needs to be hereUser me = new User(latitude,longitude,1);
-                    if (myUser != null && myUser.getFriends() != null){
-                        for (User friend: myUser.getFriends()){
-                            if (friend.isInRange(myUser,150)) {
-                                double lat = friend.getLatitude();
-                                double lon = friend.getLongitude();
-                                String name = friend.getName();
-                                dummyMarkers.add(addMapMarker(gmap,lat,lon, name));
+
+                /* Populate the map with users friends*/
+                    if (currUser != null && currUser.getFriends() != null){
+                        for (User friend: currUser.getFriends()){
+                            if (friend.isInRange(currUser,RANGE)) {
+                                dummyMarkers.add(addMapMarker(gmap,friend.getLatitude(),friend.getLongitude(), friend.getName()));
                             }
                         }
                     }
                     else
-                        Log.e("Null Error", "myUser is null.");
-                } catch (Exception e){
-                    Log.d("ERROR: Exception Thrown", "some error when trying to open the gmap");
-                }
+                        Log.e("Null Error", "currUser is null or currUser.Friends is null");
 
-                setLatitude(latitude);
-                setLongitude(longitude);
             }
         }
 
@@ -390,7 +351,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         @Override
         public void onProviderDisabled(String provider) {
-
+            Toast.makeText(getApplicationContext(), "Please enable your GPS",
+                    Toast.LENGTH_LONG).show();
         }
     }
 

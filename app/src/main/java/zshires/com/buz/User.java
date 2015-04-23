@@ -13,7 +13,7 @@ public class User {
     private double longitude;
     private int id;
     private String username;
-    private User[] friends;
+    private ArrayList<User> friends = new ArrayList<User>();
     double phonenumber;
 
 
@@ -37,7 +37,7 @@ public class User {
         this.username = name;
     }
 
-    public User(double latitude, double longitude, int id, String name, User[] friends){
+    public User(double latitude, double longitude, int id, String name, ArrayList<User> friends){
         this.latitude = latitude;
         this.longitude = longitude;
         this.id = id;
@@ -45,7 +45,7 @@ public class User {
         this.friends = friends;
     }
 
-    public User[] getFriends(){
+    public ArrayList<User> getFriends(){
         return this.friends;
     }
     public double getLongitude(){
@@ -63,14 +63,21 @@ public class User {
     public String getName(){
         return this.username;
     }
-    public String toString(){
 
+    public String toString(){
         String myString = "" + username + " lat: " + latitude + " long: " + longitude + " friends: ";
         if (friends != null){
-            myString += Arrays.toString(friends);
+            for(User u: friends){
+                myString += u.toString();
+            }
         }
         return myString;
     }
+
+    public void addFriend(User user){
+        this.friends.add(user);
+    }
+
 
     public double distance(User myFriend){
         double lat1 = this.latitude;
