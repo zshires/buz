@@ -37,7 +37,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="Home" >
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -64,8 +64,8 @@
         </service>
 
         <activity
-            android:name=".ContactsActivity"
-            android:label="@string/title_activity_contacts" >
+            android:name=".SettingsActivity"
+            android:label="Settings" >
         </activity>
         <activity
             android:name=".SignUpActivity"

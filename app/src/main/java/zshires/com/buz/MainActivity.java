@@ -2,13 +2,11 @@ package zshires.com.buz;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -166,8 +164,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             case R.id.action_messages:
                 openMessages();
                 return true;
-            case R.id.action_contacts:
-                openContacts();
+            case R.id.action_settings:
+                openSettings();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -179,9 +177,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    public void openContacts(){
-
-        Intent intent = new Intent(this, ContactsActivity.class);
+    public void openSettings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
