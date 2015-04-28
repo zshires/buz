@@ -254,6 +254,35 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         editor.commit();
     }
 
+    // Send an upstream message.
+    public void onClick(final View view) {
+
+        if (view == findViewById(R.id.send)) {
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    String msg = "";
+                    try {
+                        Bundle data = new Bundle();
+                        data.putString("my_message", "Hello World");
+                        data.putString("my_action", "com.google.android.gcm.demo.app.ECHO_NOW");
+                        String id = Integer.toString(msgId.incrementAndGet());
+                        gcm.send(SENDER_ID + "@gcm.googleapis.com", id, data);
+                        msg = "Sent message";
+                    } catch (IOException ex) {
+                        msg = "Error :" + ex.getMessage();
+                    }
+                    return msg;
+                }
+
+                @Override
+                protected void onPostExecute(String msg) {
+                    mDisplay.append(msg + "\n");
+                }
+            }.execute(null, null, null);
+        }
+    }
+
 
 
 
