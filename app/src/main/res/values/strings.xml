@@ -42,5 +42,6 @@
     <string name="no_address">No addresses found</string>
     <string name="no_intent_found">No application found to handle this action</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="gcmSenderId">512890684724</string>
 
 </resources>
