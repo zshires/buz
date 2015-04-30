@@ -20,7 +20,10 @@
         android:layout_gravity="center_horizontal"
         android:textSize="40dp"
         android:textColor="#2f393d"
-        android:focusableInTouchMode="true" />
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <ImageView
         android:layout_width="200dp"
