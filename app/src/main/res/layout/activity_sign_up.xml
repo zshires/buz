@@ -39,16 +39,18 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="#502d16"
-            android:onClick="signUp"
-            android:text="Sign Up!"
-            android:textColor="#FFFFFF" />
 
-        </RelativeLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#502d16"
+        android:onClick="signUp"
+        android:text="Sign Up!"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>
