@@ -66,54 +66,60 @@ public class SignUpActivity extends ActionBarActivity {
         AsyncHttpClient client = new AsyncHttpClient(url);
         StringEntity jsonParams = null;
         List<NameValuePair> params = null;
+        if (password.length() >= 3 && username.length() >= 3) {
+            try {
+                //JSONObject json = new JSONObject();
+                params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", username));
+                //json.put("username", username);
+                //json.put("phonenumber", "2629021681");
+                //json.put("latitude", "333");
+                //json.put("longitude", "444");
+                //jsonParams = new StringEntity(json.toString());
+                //Log.d(TAG, json.toString());
 
-        try{
-            //JSONObject json = new JSONObject();
-            params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("username", username));
-            //json.put("username", username);
-            //json.put("phonenumber", "2629021681");
-            //json.put("latitude", "333");
-            //json.put("longitude", "444");
-            //jsonParams = new StringEntity(json.toString());
-            //Log.d(TAG, json.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        }catch(Exception e){
-            e.printStackTrace();
+            List<Header> headers = new ArrayList<Header>();
+            headers.add(new BasicHeader("Accept", "application/json"));
+            headers.add(new BasicHeader("Content-Type", "application/json"));
+
+            //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
+
+            client.post("users.json", params, headers, new JsonResponseHandler() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Sign up success", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+
+                    });
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+
+                public void onFailure() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Sign up failed", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+
+                    });
+                }
+            });
         }
-
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-        headers.add(new BasicHeader("Content-Type", "application/json"));
-
-        //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
-
-        client.post("users.json", params, headers,new JsonResponseHandler() {
-            @Override
-            public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Sign up success", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-
-                });
-                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-
-            public void onFailure(){
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Sign up failed", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-
-                });
-            }
-        });
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),"Username and Password must be " +
+                    "greater than 3 characters each", Toast.LENGTH_SHORT);
+            toast.show();
+        }
 
     }
 }
