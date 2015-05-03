@@ -11,17 +11,16 @@
     android:weightSum="1"
     tools:context="zshires.com.buz.LoginActivity">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="BUZ"
         android:id="@+id/loginTitle"
         android:layout_gravity="center_horizontal"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textColor="#2f393d"
         android:clickable="false"
-        android:cursorVisible="false"
         android:focusable="false"
         android:focusableInTouchMode="false"/>
 
