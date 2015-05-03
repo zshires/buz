@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,10 +48,14 @@ public class LoginActivity extends FragmentActivity {
             EditText name = (EditText) findViewById(R.id.username);
             Integer idPref = Integer.parseInt(name.getText().toString());
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            prefs.edit().putInt("idPref", idPref).commit();
+            prefs.edit().putInt("idPref", idPref).apply();
+
+        }catch (Exception e){
+            Log.e("Login Activity", "login button error");}
+        finally {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-        }catch (Exception e){}
+        }
     }
 
     public void forgotPassword(View view){
