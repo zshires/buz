@@ -1,10 +1,12 @@
 package zshires.com.buz;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class SettingsActivity extends ActionBarActivity {
@@ -45,6 +47,10 @@ public class SettingsActivity extends ActionBarActivity {
     }
     public void openMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+    public void openContacts(View view){
+        Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
     }
 }

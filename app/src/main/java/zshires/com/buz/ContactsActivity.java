@@ -116,5 +116,6 @@ public class ContactsActivity extends ListActivity {
             this.name = name;
         }
     }
+
 }
 
