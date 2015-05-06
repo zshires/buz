@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- Permission to use AlarmManager -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <uses-permission android:name="zshires.com.buz.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -92,6 +94,17 @@
             android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts" >
         </activity>
+
+        <activity android:name=".MoreInfoNotification"
+            android:label="More on notification"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <receiver android:name=".AlertReceiver"/>
+
 
         <receiver
             android:name=".MessagesActivity$SmsReceiver"
