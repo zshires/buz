@@ -17,8 +17,22 @@ import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
 
+import net.callumtaylor.asynchttp.AsyncHttpClient;
+import net.callumtaylor.asynchttp.response.JsonResponseHandler;
+
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoginActivity extends FragmentActivity {
     private MainFragment mainFragment;
+    String url = "https://still-journey-7705.herokuapp.com/";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +58,66 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void login(View view){
+        EditText pass = (EditText)findViewById(R.id.password);
+        EditText user = (EditText)findViewById(R.id.username);
+        String password = pass.getText().toString();
+        String username = user.getText().toString();
+
+        AsyncHttpClient client = new AsyncHttpClient(url);
+        StringEntity jsonParams = null;
+        List<NameValuePair> params = null;
         try {
+            //JSONObject json = new JSONObject();
+            params = new ArrayList<NameValuePair>();
+            //params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("password", password));
+            //json.put("username", username);
+            //json.put("phonenumber", "2629021681");
+            //json.put("latitude", "333");
+            //json.put("longitude", "444");
+            //jsonParams = new StringEntity(json.toString());
+            //Log.d(TAG, json.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+        //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
+
+        //user path
+        String userPath = "users/" + username + ".json";
+        client.get(userPath, params, headers, new JsonResponseHandler() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                });
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+
+            public void onFailure() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                });
+            }
+        });
+
+        /*try {
             EditText name = (EditText) findViewById(R.id.username);
             Integer idPref = Integer.parseInt(name.getText().toString());
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -55,7 +128,7 @@ public class LoginActivity extends FragmentActivity {
         finally {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-        }
+        }*/
     }
 
     public void forgotPassword(View view){
