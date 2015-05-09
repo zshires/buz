@@ -399,24 +399,4 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         return currUser;
     }
 
-    public void sendMessage(String phoneNum, String message) {
-        try{
-            // Handles sending and receiving data and text
-            SmsManager smsManager = SmsManager.getDefault();
-            // Sends the text message
-            // 2nd is for the service center address or null
-            // 4th if not null broadcasts with a successful send
-            // 5th if not null broadcasts with a successful delivery
-            smsManager.sendTextMessage(phoneNum, null, message, null, null);
-        }
-        catch (IllegalArgumentException ex){
-            Log.e("TEXTING", "Destination Address or Data Empty");
-            Toast.makeText(this, "Enter a Phone Number and Message", Toast.LENGTH_LONG).show();
-            ex.printStackTrace();
-        }
-        catch (Exception ex) {
-            Toast.makeText(this, "Message Not Sent", Toast.LENGTH_LONG).show();
-            ex.printStackTrace();
-        }
-    }
 }
