@@ -1,18 +1,13 @@
 package zshires.com.buz;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
-import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +21,7 @@ import java.util.ArrayList;
 
 public class ContactsActivity extends Activity {
     ArrayAdapter<String> adapter;
-    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayList<String> listItems = new ArrayList<String>();
     User currUser;
 
     @Override
@@ -37,7 +32,7 @@ public class ContactsActivity extends Activity {
         ArrayList<ContactTuple> myContacts = fetchContactsCProviderClient();
         currUser = MainActivity.getCurrUser();
 
-        ListAdapter theAdapter = new MyAdapter(this, myContacts);
+        ListAdapter theAdapter = new ContactAdapter(this, myContacts);
 
         ListView theListView = (ListView) findViewById(R.id.theListView);
         theListView.setAdapter(theAdapter);
