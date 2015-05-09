@@ -76,14 +76,8 @@ public class ContactsActivity extends Activity {
                     Cursor phones = cResolver.query(Phone.CONTENT_URI, null,
                             Phone.CONTACT_ID + " = " + contactId, null, null);
 
-                    while (phones.moveToNext()) {
-                        String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
-                        int type = phones.getInt(phones.getColumnIndex(Phone.TYPE));
-
-                        mContactList.add(new ContactTuple(displayName, number));
-                        break;
-
-                    }
+                    String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
+                    mContactList.add(new ContactTuple(displayName, number));
                     phones.close();
                 }
             }
