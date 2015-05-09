@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -75,7 +74,7 @@ public class ContactsActivity extends Activity {
                             mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
                     Cursor phones = cResolver.query(Phone.CONTENT_URI, null,
                             Phone.CONTACT_ID + " = " + contactId, null, null);
-
+                    phones.moveToNext();
                     String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
                     mContactList.add(new ContactTuple(displayName, number));
                     phones.close();
@@ -84,12 +83,6 @@ public class ContactsActivity extends Activity {
 
             mCursor.close();
         }
-
-        /*catch (RemoteException e)
-        {
-            e.printStackTrace();
-            mContactList = null;
-        }*/
         catch (Exception e)
         {
             e.printStackTrace();
