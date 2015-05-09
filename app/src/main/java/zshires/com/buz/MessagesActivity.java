@@ -251,7 +251,7 @@ public class MessagesActivity extends ActionBarActivity {
                 .setContentTitle("Message")
                 .setContentText("New Message")
                 .setTicker("Alert New Message")
-                .setSmallIcon(R.drawable.bee);
+                .setSmallIcon(R.drawable.ic_launcher);
 
         // Define that we have the intention of opening MoreInfoNotification
         Intent moreInfoIntent = new Intent(this, MoreInfoNotification.class);

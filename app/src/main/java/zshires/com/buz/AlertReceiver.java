@@ -27,7 +27,7 @@ public class AlertReceiver extends BroadcastReceiver{
         // Builds a notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.bee)
+                        .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(msg)
                         .setTicker(msgAlert)
                         .setContentText(msgText);

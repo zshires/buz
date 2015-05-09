@@ -40,7 +40,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     public static MapFragment map;
     public GoogleMap gmap;
     private String SERVER_URL = "https://still-journey-7705.herokuapp.com/";
@@ -48,6 +48,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private final int RANGE = 60; //Distance in meters that controls how far you can see your friends
     private User currUser;
     Circle mapCircle;
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //TODO: send sms to that user
+        String title = marker.getTitle();
+        Toast toast = Toast.makeText(getApplicationContext(), "Buz " + title + "!", Toast.LENGTH_SHORT);
+        toast.show();
+    }
 
     public interface BackendCallback {
         public void onRequestCompleted(Object result);
@@ -74,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, ll);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, ll);
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
 
         /* Grab the map and initialize */
@@ -192,6 +200,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         map.setOnMarkerClickListener(this);
+        map.setOnInfoWindowClickListener(this);
         map.setMyLocationEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setZoomGesturesEnabled(false);
@@ -213,10 +222,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-            String title = marker.getTitle();
-            Toast toast = Toast.makeText(getApplicationContext(), "Buz " + title + "!", Toast.LENGTH_SHORT);
-            toast.show();
-        return false;
+            marker.showInfoWindow();
+        return true;
     }
 
     public void updateLocation(User me, final BackendCallback callback){
@@ -324,7 +331,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                 /* Populate the map with users friends*/
                     if (currUser != null && currUser.getFriends() != null){
-                        for (User friend: currUser.getFriends()){
+                        for (User friend : currUser.getFriends()){
                             if (friend.isInRange(currUser,RANGE)) {
                                 dummyMarkers.add(addMapMarker(gmap,friend.getLatitude(),friend.getLongitude(), friend.getName()));
                             }
