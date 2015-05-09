@@ -39,8 +39,8 @@ public class LoginActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextView tv=(TextView)findViewById(R.id.loginTitle);
-        Typeface face=Typeface.createFromAsset(getAssets(),"fonts/Aventura-Bold.otf");
+        TextView tv = (TextView)findViewById(R.id.loginTitle);
+        Typeface face = Typeface.createFromAsset(getAssets(),"fonts/Aventura-Bold.otf");
         tv.setTypeface(face);
 
         if (savedInstanceState == null) {

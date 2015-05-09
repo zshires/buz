@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,9 +52,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO: send sms to that user
         String title = marker.getTitle();
-        Toast toast = Toast.makeText(getApplicationContext(), "Buz " + title + "!", Toast.LENGTH_SHORT);
+        //find the user you clicked on in the friends list
+        for(User u : currUser.getFriends()){
+            if(u.getName().equals(title)){
+                //Buz! that user
+                sendMessage(Integer.toString(u.getPhonenumber()), "You've been Buzed by " + currUser.getName() + "!");
+                break;
+            }
+        }
+        Toast toast = Toast.makeText(getApplicationContext(), "You Buzed " + title + "!", Toast.LENGTH_SHORT);
         toast.show();
     }
 
@@ -98,7 +106,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 openMessages();
             }
         });
-*/
+
         /* Initialize our user*/
         /* Populate friends from backend
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -391,4 +399,24 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         return currUser;
     }
 
+    public void sendMessage(String phoneNum, String message) {
+        try{
+            // Handles sending and receiving data and text
+            SmsManager smsManager = SmsManager.getDefault();
+            // Sends the text message
+            // 2nd is for the service center address or null
+            // 4th if not null broadcasts with a successful send
+            // 5th if not null broadcasts with a successful delivery
+            smsManager.sendTextMessage(phoneNum, null, message, null, null);
+        }
+        catch (IllegalArgumentException ex){
+            Log.e("TEXTING", "Destination Address or Data Empty");
+            Toast.makeText(this, "Enter a Phone Number and Message", Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
+        catch (Exception ex) {
+            Toast.makeText(this, "Message Not Sent", Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
+    }
 }

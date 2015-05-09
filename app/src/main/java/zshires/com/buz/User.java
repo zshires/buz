@@ -14,7 +14,7 @@ public class User {
     private int id;
     private String username;
     private ArrayList<User> friends = new ArrayList<User>();
-    double phonenumber;
+    int phonenumber;
 
     public int getID(){
         return this.id;
@@ -62,6 +62,7 @@ public class User {
     public String getName(){
         return this.username;
     }
+    public int getPhonenumber() { return this.phonenumber; }
 
     public String toString(){
         String myString = "" + username + " lat: " + latitude + " long: " + longitude + " friends: ";
