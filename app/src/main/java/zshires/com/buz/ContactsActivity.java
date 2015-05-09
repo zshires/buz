@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class ContactsActivity extends Activity {
 
         for(ContactTuple contact :myContacts){
             test.add(contact.name);
+            test.add(contact.number);
         }
 
         ListAdapter theAdapter = new MyAdapter(this, test);
@@ -58,12 +60,6 @@ public class ContactsActivity extends Activity {
                 Toast.makeText(ContactsActivity.this, inviteNotif, Toast.LENGTH_SHORT).show();
             }
         });
-/*
-        for (ContactTuple contact : myContacts){
-            addItems(getListView(),contact.name);
-            addItems(getListView(),Integer.toString(contact.number));
-        }*/
-
     }
 
     private ArrayList<ContactTuple> fetchContactsCProviderClient()
@@ -72,26 +68,51 @@ public class ContactsActivity extends Activity {
         try
         {
             ContentResolver cResolver= this.getContentResolver();
-            //ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
-            Cursor mCursor = cResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+            ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
+            Cursor mCursor = mCProviderClient.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
             if (mCursor != null && mCursor.getCount() > 0)
             {
                 mContactList = new ArrayList<ContactTuple>();
                 mCursor.moveToFirst();
                 while (!mCursor.isLast())
                 {
-                    String displayName = mCursor.getString(mCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                    int numberIndex = mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    ContactTuple ct = new ContactTuple(displayName, numberIndex);
-                    mContactList.add(ct);
+                    String displayName =
+                            mCursor.getString(mCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+                    String contactId =
+                            mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    Cursor phones = cResolver.query(Phone.CONTENT_URI, null,
+                            Phone.CONTACT_ID + " = " + contactId, null, null);
+
+                    while (phones.moveToNext()) {
+                        String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
+                        int type = phones.getInt(phones.getColumnIndex(Phone.TYPE));
+
+                        mContactList.add(new ContactTuple(displayName, number));
+                        break;
+
+                    }
+                    phones.close();
                     mCursor.moveToNext();
                 }
                 if (mCursor.isLast())
                 {
                     String displayName = mCursor.getString(mCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                    int numberIndex = mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    ContactTuple ct = new ContactTuple(displayName,numberIndex);
-                    mContactList.add(ct);
+                    String contactId =
+                            mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    Cursor phones = cResolver.query(Phone.CONTENT_URI, null,
+                            Phone.CONTACT_ID + " = " + contactId, null, null);
+
+                    while (phones.moveToNext()) {
+                        String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
+                        int type = phones.getInt(phones.getColumnIndex(Phone.TYPE));
+
+                        if (type == Phone.TYPE_MOBILE) {
+                            ContactTuple ct = new ContactTuple(displayName, number);
+                            mContactList.add(ct);
+                            break;
+                        }
+                        phones.close();
+                    }
                 }
             }
 
@@ -143,8 +164,8 @@ public class ContactsActivity extends Activity {
 
     public class ContactTuple{
         public String name;
-        public int number;
-        public ContactTuple(String name, int number){
+        public String number;
+        public ContactTuple(String name, String number){
             this.number = number;
             this.name = name;
         }
