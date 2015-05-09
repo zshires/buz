@@ -67,7 +67,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Homes" >
+            android:label="Home" >
         </activity>
 
         <meta-data
@@ -95,7 +95,7 @@
 
         <activity
             android:name=".FriendsActivity"
-            android:label="@string/title_activity_contacts" >
+            android:label="Friends" >
         </activity>
 
         <activity android:name=".MoreInfoNotification"
