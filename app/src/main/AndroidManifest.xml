@@ -93,6 +93,11 @@
             android:label="@string/title_activity_contacts" >
         </activity>
 
+        <activity
+            android:name=".FriendsActivity"
+            android:label="@string/title_activity_contacts" >
+        </activity>
+
         <activity android:name=".MoreInfoNotification"
             android:label="More on notification"
             android:parentActivityName=".MainActivity">
