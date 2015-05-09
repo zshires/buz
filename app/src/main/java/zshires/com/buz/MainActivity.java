@@ -90,14 +90,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         map.getMapAsync(this);
         gmap  = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        /* Swipe Listener */
+
+        /* Swipe Listener
         view.setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeLeft() {
                 openMessages();
             }
         });
-
+*/
         /* Initialize our user*/
         /* Populate friends from backend
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -169,8 +170,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         // as you specify a parent activity in AndroidManifest.xml.
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_messages:
-                openMessages();
+            case R.id.action_friends:
+                openFriends();
                 return true;
             case R.id.action_settings:
                 openSettings();
@@ -180,8 +181,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
     }
 
-    public void openMessages() {
-        Intent intent = new Intent(this, MessagesActivity.class);
+    public void openFriends() {
+        Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
     }
 

@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
-    <item android:id="@+id/action_messages"
-        android:icon="@drawable/ic_action_email"
-        android:title="Messages"
+    <item android:id="@+id/action_friends"
+        android:icon="@drawable/person_stalker"
+        android:title="Friends"
         app:showAsAction="ifRoom"
         android:visible="true"/>
 

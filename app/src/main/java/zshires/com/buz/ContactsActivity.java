@@ -88,7 +88,6 @@ public class ContactsActivity extends Activity {
                     phones.close();
                 }
             }
-
             mCursor.close();
         }
         catch (Exception e)

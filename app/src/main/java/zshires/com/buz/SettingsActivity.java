@@ -1,5 +1,6 @@
 package zshires.com.buz;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
@@ -9,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,40 +18,4 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_settings);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_messages:
-                openMessages();
-                return true;
-            case R.id.action_main:
-                openMain();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    public void openMessages() {
-        Intent intent = new Intent(this, MessagesActivity.class);
-        startActivity(intent);
-    }
-    public void openMain() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-    public void openContacts(View view){
-        Intent intent = new Intent(this, ContactsActivity.class);
-        startActivity(intent);
-    }
 }
