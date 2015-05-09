@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -50,6 +51,9 @@ public class ContactsActivity extends Activity {
                 String yourName = currUser.getName();
                 sendMessage("4148078600", yourName + " wants to add you to Buz! Download Buz on the Play Store to join the Hive!");
                 Toast.makeText(ContactsActivity.this, inviteNotif, Toast.LENGTH_SHORT).show();
+
+                ImageView img= (ImageView) view.findViewById(R.id.imageView1);
+                img.setImageResource(R.drawable.ios7_plus_grey);
             }
         });
     }
