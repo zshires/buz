@@ -22,13 +22,23 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 
+import net.callumtaylor.asynchttp.AsyncHttpClient;
+import net.callumtaylor.asynchttp.response.JsonResponseHandler;
+
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ContactsActivity extends Activity {
     ArrayAdapter<String> adapter;
     ArrayList<String> listItems=new ArrayList<String>();
     User currUser;
+    String url = "https://still-journey-7705.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +53,8 @@ public class ContactsActivity extends Activity {
         ListView theListView = (ListView) findViewById(R.id.theListView);
         theListView.setAdapter(theAdapter);
 
+
+
         theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,6 +66,32 @@ public class ContactsActivity extends Activity {
 
                 ImageView img= (ImageView) view.findViewById(R.id.imageView1);
                 img.setImageResource(R.drawable.ios7_plus_grey);
+
+                /*
+                AsyncHttpClient client = new AsyncHttpClient(url);
+                List<Header> headers = new ArrayList<Header>();
+                headers.add(new BasicHeader("Accept", "application/json"));
+                headers.add(new BasicHeader("Content-Type", "application/json"));
+
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("phonenumber", contact.number));
+
+                client.post("users/" + currUser.getID() + ".json", params, headers, new JsonResponseHandler() {
+                    @Override
+                    public void onSuccess() {
+                        //TODO make view above final, will that work?
+                        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
+                        img.setImageResource(R.drawable.ios7_plus_grey);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        //TODO make view above final, will that work?
+                        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
+                        img.setImageResource(R.drawable.check);
+                    }
+                });
+                */
             }
         });
     }
