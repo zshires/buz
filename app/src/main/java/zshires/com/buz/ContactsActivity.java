@@ -1,5 +1,6 @@
 package zshires.com.buz;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -12,12 +13,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 
-public class ContactsActivity extends ListActivity {
+public class ContactsActivity extends Activity {
     ArrayAdapter<String> adapter;
     ArrayList<String> listItems=new ArrayList<String>();
 
@@ -27,11 +32,33 @@ public class ContactsActivity extends ListActivity {
         setContentView(R.layout.activity_contacts);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         ArrayList<ContactTuple> myContacts = fetchContactsCProviderClient();
+        ArrayList<String> test = new ArrayList<String>();
 
+        for(ContactTuple contact :myContacts){
+            test.add(contact.name);
+            test.add(Integer.toString(contact.number));
+        }
+
+        ListAdapter theAdapter = new MyAdapter(this, test);
+
+        ListView theListView = (ListView) findViewById(R.id.theListView);
+        theListView.setAdapter(theAdapter);
+
+        theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String helloWorld = "yolo";
+                String.valueOf(parent.getItemAtPosition(position));
+
+                Toast.makeText(ContactsActivity.this, helloWorld, Toast.LENGTH_SHORT).show();
+            }
+        });
+/*
         for (ContactTuple contact : myContacts){
             addItems(getListView(),contact.name);
             addItems(getListView(),Integer.toString(contact.number));
-        }
+        }*/
+
     }
 
     private ArrayList<ContactTuple> fetchContactsCProviderClient()
@@ -40,8 +67,8 @@ public class ContactsActivity extends ListActivity {
         try
         {
             ContentResolver cResolver= this.getContentResolver();
-            ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
-            Cursor mCursor = mCProviderClient.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+            //ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
+            Cursor mCursor = cResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
             if (mCursor != null && mCursor.getCount() > 0)
             {
                 mContactList = new ArrayList<ContactTuple>();
@@ -65,11 +92,11 @@ public class ContactsActivity extends ListActivity {
 
             mCursor.close();
         }
-        catch (RemoteException e)
+        /*catch (RemoteException e)
         {
             e.printStackTrace();
             mContactList = null;
-        }
+        }*/
         catch (Exception e)
         {
             e.printStackTrace();
