@@ -16,7 +16,6 @@ public class User {
     private ArrayList<User> friends = new ArrayList<User>();
     double phonenumber;
 
-
     public int getID(){
         return this.id;
     }

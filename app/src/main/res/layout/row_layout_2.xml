@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:textStyle="bold"
         android:padding="15dp"
         />
 
@@ -27,7 +26,7 @@
         android:layout_height="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/ios7_plus"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
 

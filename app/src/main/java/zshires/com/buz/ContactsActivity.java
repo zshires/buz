@@ -10,6 +10,8 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 public class ContactsActivity extends Activity {
     ArrayAdapter<String> adapter;
     ArrayList<String> listItems=new ArrayList<String>();
+    User currUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +37,10 @@ public class ContactsActivity extends Activity {
         ArrayList<ContactTuple> myContacts = fetchContactsCProviderClient();
         ArrayList<String> test = new ArrayList<String>();
 
+        currUser = MainActivity.getCurrUser();
+
         for(ContactTuple contact :myContacts){
             test.add(contact.name);
-            test.add(Integer.toString(contact.number));
         }
 
         ListAdapter theAdapter = new MyAdapter(this, test);
@@ -47,10 +51,11 @@ public class ContactsActivity extends Activity {
         theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String helloWorld = "yolo";
-                String.valueOf(parent.getItemAtPosition(position));
-
-                Toast.makeText(ContactsActivity.this, helloWorld, Toast.LENGTH_SHORT).show();
+                String contactName = String.valueOf(parent.getItemAtPosition(position));
+                String inviteNotif = "Invitation sent to " + contactName;
+                String yourName = currUser.getName();
+                sendMessage("4148078600", yourName + " wants to add you to Buz! Download Buz on the Play Store to join the Hive!");
+                Toast.makeText(ContactsActivity.this, inviteNotif, Toast.LENGTH_SHORT).show();
             }
         });
 /*
@@ -92,6 +97,7 @@ public class ContactsActivity extends Activity {
 
             mCursor.close();
         }
+
         /*catch (RemoteException e)
         {
             e.printStackTrace();
@@ -141,6 +147,27 @@ public class ContactsActivity extends Activity {
         public ContactTuple(String name, int number){
             this.number = number;
             this.name = name;
+        }
+    }
+
+    public void sendMessage(String phoneNum, String message) {
+        try{
+            // Handles sending and receiving data and text
+            SmsManager smsManager = SmsManager.getDefault();
+            // Sends the text message
+            // 2nd is for the service center address or null
+            // 4th if not null broadcasts with a successful send
+            // 5th if not null broadcasts with a successful delivery
+            smsManager.sendTextMessage(phoneNum, null, message, null, null);
+        }
+        catch (IllegalArgumentException ex){
+            Log.e("TEXTING", "Destination Address or Data Empty");
+            Toast.makeText(this, "Enter a Phone Number and Message", Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
+        catch (Exception ex) {
+            Toast.makeText(this, "Message Not Sent", Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
         }
     }
 

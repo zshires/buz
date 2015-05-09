@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private String SERVER_URL = "https://still-journey-7705.herokuapp.com/";
     private static final String TAG = "MainActivity";
     private final int RANGE = 60; //Distance in meters that controls how far you can see your friends
-    private User currUser;
+    private static User currUser;
     Circle mapCircle;
 
     @Override
@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        currUser = new User(0,0,0);
+        currUser = new User(0,0,0,"TempUserName");
         currUser.addFriend((new User(43.068762, -89.408195, 1, "A")));
         currUser.addFriend((new User(43.068619, -89.408314, 2, "B")));
         currUser.addFriend((new User(43.068873, -89.408581, 3, "C")));
@@ -384,6 +384,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
 
         return errorMessage;
+    }
+
+    public static User getCurrUser(){
+        return currUser;
     }
 
 }
