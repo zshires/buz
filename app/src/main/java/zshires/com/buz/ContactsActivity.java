@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 
 public class ContactsActivity extends ListActivity {
-    ContentResolver cResolver= this.getContentResolver();
-    ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
     ArrayAdapter<String> adapter;
     ArrayList<String> listItems=new ArrayList<String>();
 
@@ -41,6 +39,8 @@ public class ContactsActivity extends ListActivity {
         ArrayList<ContactTuple> mContactList = null;
         try
         {
+            ContentResolver cResolver= this.getContentResolver();
+            ContentProviderClient mCProviderClient = cResolver.acquireContentProviderClient(ContactsContract.Contacts.CONTENT_URI);
             Cursor mCursor = mCProviderClient.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
             if (mCursor != null && mCursor.getCount() > 0)
             {
