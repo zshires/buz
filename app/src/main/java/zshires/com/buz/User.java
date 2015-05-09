@@ -76,6 +76,13 @@ public class User {
     public void addFriend(User user){
         this.friends.add(user);
     }
+    public void removeFriend(User user) {
+        if(friends.contains(user)){
+            friends.remove(user);
+        } else {
+            Log.e("Warning", "Removing user not found");
+        }
+    }
 
 
     public double distance(User myFriend){
