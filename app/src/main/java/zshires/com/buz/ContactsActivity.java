@@ -36,16 +36,9 @@ public class ContactsActivity extends Activity {
         setContentView(R.layout.activity_contacts);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         ArrayList<ContactTuple> myContacts = fetchContactsCProviderClient();
-        ArrayList<String> test = new ArrayList<String>();
-
         currUser = MainActivity.getCurrUser();
 
-        for(ContactTuple contact :myContacts){
-            test.add(contact.name);
-            test.add(contact.number);
-        }
-
-        ListAdapter theAdapter = new MyAdapter(this, test);
+        ListAdapter theAdapter = new MyAdapter(this, myContacts);
 
         ListView theListView = (ListView) findViewById(R.id.theListView);
         theListView.setAdapter(theAdapter);
@@ -53,8 +46,8 @@ public class ContactsActivity extends Activity {
         theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String contactName = String.valueOf(parent.getItemAtPosition(position));
-                String inviteNotif = "Invitation sent to " + contactName;
+                ContactTuple contact = (ContactTuple) parent.getItemAtPosition(position);
+                String inviteNotif = "Invitation sent to " + contact.name;
                 String yourName = currUser.getName();
                 sendMessage("4148078600", yourName + " wants to add you to Buz! Download Buz on the Play Store to join the Hive!");
                 Toast.makeText(ContactsActivity.this, inviteNotif, Toast.LENGTH_SHORT).show();

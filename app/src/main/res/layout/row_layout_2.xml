@@ -8,22 +8,34 @@
 <RelativeLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <!-- Used to define a custom ListView row -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/contactView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:padding="15dp"
+        android:padding="5dp"
+        android:layout_alignParentTop="true"
         />
 
-    <!-- Image for each ListItem row
-        We can refer to images in our drawable folder with
-        @drawable/dot for the image named dot.png -->
+    <TextView
+        android:id="@+id/numberView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        />
+    </LinearLayout>
+
+
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
         android:src="@drawable/ios7_plus"

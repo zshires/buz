@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import zshires.com.buz.R;
 
 // We can create custom adapters
-class MyAdapter extends ArrayAdapter<String> {
+class MyAdapter extends ArrayAdapter<ContactsActivity.ContactTuple> {
 
-    public MyAdapter(Context context, ArrayList<String> values){
+    public MyAdapter(Context context, ArrayList<ContactsActivity.ContactTuple> values){
 
         super(context, R.layout.row_layout_2, values);
 
@@ -40,13 +40,17 @@ class MyAdapter extends ArrayAdapter<String> {
         View theView = theInflater.inflate(R.layout.row_layout_2, parent, false);
 
         // We retrieve the text from the array
-        String contact = getItem(position);
+        String contact = getItem(position).name;
+        String phoneNum = getItem(position).number;
 
         // Get the TextView we want to edit
-        TextView theTextView = (TextView) theView.findViewById(R.id.textView1);
+        TextView contactView = (TextView) theView.findViewById(R.id.contactView);
+        TextView numberView = (TextView) theView.findViewById(R.id.numberView);
 
-        // Put the next TV Show into the TextView
-        theTextView.setText(contact);
+        // Put the next contact into the TextView
+        contactView.setText(contact);
+        numberView.setText(phoneNum);
+
     /*
         // Get the ImageView in the layout
         ImageView theImageView = (ImageView) theView.findViewById(R.id.imageView1);
