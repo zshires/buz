@@ -10,8 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <!-- Permission to use AlarmManager -->
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
-
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="zshires.com.buz.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -43,15 +42,16 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
                 <data android:scheme="mmsto" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name"
@@ -81,10 +81,6 @@
         </service>
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="Settings" >
-        </activity>
-        <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up" >
         </activity>
@@ -92,23 +88,20 @@
             android:name=".ContactsActivity"
             android:label="@string/title_activity_contacts" >
         </activity>
-
         <activity
             android:name=".FriendsActivity"
             android:label="Friends" >
         </activity>
-
-        <activity android:name=".MoreInfoNotification"
+        <activity
+            android:name=".MoreInfoNotification"
             android:label="More on notification"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
 
-        <receiver android:name=".AlertReceiver"/>
-
-
+        <receiver android:name=".AlertReceiver" />
         <receiver
             android:name=".MessagesActivity$SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS" >
@@ -125,6 +118,7 @@
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".MessagesActivity$HeadlessSmsSendService"
             android:exported="true"
@@ -141,6 +135,10 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>
