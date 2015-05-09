@@ -74,7 +74,7 @@ public class ContactsActivity extends Activity {
             {
                 mContactList = new ArrayList<ContactTuple>();
                 mCursor.moveToFirst();
-                while (!mCursor.isLast())
+                while (mCursor.moveToNext())
                 {
                     String displayName =
                             mCursor.getString(mCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
@@ -92,27 +92,6 @@ public class ContactsActivity extends Activity {
 
                     }
                     phones.close();
-                    mCursor.moveToNext();
-                }
-                if (mCursor.isLast())
-                {
-                    String displayName = mCursor.getString(mCursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                    String contactId =
-                            mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    Cursor phones = cResolver.query(Phone.CONTENT_URI, null,
-                            Phone.CONTACT_ID + " = " + contactId, null, null);
-
-                    while (phones.moveToNext()) {
-                        String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
-                        int type = phones.getInt(phones.getColumnIndex(Phone.TYPE));
-
-                        if (type == Phone.TYPE_MOBILE) {
-                            ContactTuple ct = new ContactTuple(displayName, number);
-                            mContactList.add(ct);
-                            break;
-                        }
-                        phones.close();
-                    }
                 }
             }
 
