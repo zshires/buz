@@ -15,7 +15,7 @@ public class User implements Serializable{
     private int id;
     private String username;
     private ArrayList<User> friends = new ArrayList<User>();
-    int phonenumber;
+    String phonenumber;
 
     public int getID(){
         return this.id;
@@ -25,6 +25,12 @@ public class User implements Serializable{
         this.latitude = latitude;
         this.longitude = longitude;
     }*/
+    public User(int id, String username, String phonenumber, ArrayList<User> friends){
+        this.id = id;
+        this.username = username;
+        this.phonenumber = phonenumber;
+        this.friends = friends;
+    }
     public User(double latitude, double longitude, int id){
         this.latitude = latitude;
         this.longitude = longitude;
@@ -63,7 +69,7 @@ public class User implements Serializable{
     public String getName(){
         return this.username;
     }
-    public int getPhonenumber() { return this.phonenumber; }
+    public String getPhonenumber() { return this.phonenumber; }
 
     public String toString(){
         String myString = "" + username + " lat: " + latitude + " long: " + longitude + " friends: ";

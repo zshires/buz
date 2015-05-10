@@ -137,7 +137,13 @@ public class LoginActivity extends FragmentActivity {
                     Log.d("User:" ,user.toString());
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("currUser", user);
+                    /*
+                    intent.putExtra("username", user.getName());
+                    intent.putExtra("phonenumber", user.getPhonenumber());
+                    intent.putExtra("friends",user.getFriends());
+                    intent.putExtra("id", user.getID());
+                    */
+                    intent.putExtra("user",user);
                     startActivity(intent);
                     loginActivity.finish();
 

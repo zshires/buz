@@ -143,7 +143,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currUser = (User) savedInstanceState.getSerializable("currUser");
+        Intent i = getIntent();
+        currUser = (User) i.getSerializableExtra("user");
 //        currUser = new User(0,0,0,"TempUserName");
 //        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));
 //        currUser.addFriend((new User(43.068619, -89.408314, 2, "Mike Fix")));
