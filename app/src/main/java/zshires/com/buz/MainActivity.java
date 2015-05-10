@@ -1,18 +1,25 @@
 package zshires.com.buz;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
@@ -41,6 +48,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+
 public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     public static MapFragment map;
     public GoogleMap gmap;
@@ -50,6 +58,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static User currUser;
     Circle mapCircle;
 
+    // Allows us to notify the user that something happened in the background
+    NotificationManager notificationManager;
+
+    // Used to track notifications
+    int notifID = 33;
+    // Used to track if notification is active in the task bar
+    boolean isNotificActive = false;
+
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         String title = marker.getTitle();
@@ -57,12 +74,56 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         for(User u : currUser.getFriends()){
             if(u.getName().equals(title)){
                 //Buz! that user
-                sendMessage(Integer.toString(u.getPhonenumber()), "You've been Buzed by " + currUser.getName() + "!");
+                //TODO: this should be a notification on the receivers phone, not yours.
+                //The notification should take you to the map. it currently takes you to some random page
+                showNotification();
                 break;
             }
         }
         Toast toast = Toast.makeText(getApplicationContext(), "You Buzed " + title + "!", Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    public void showNotification() {
+
+        // Builds a notification
+        NotificationCompat.Builder notificBuilder = new NotificationCompat.Builder(this)
+                .setContentTitle("Message")
+                .setContentText("New Message")
+                .setTicker("Alert New Message")
+                .setSmallIcon(R.drawable.ic_launcher);
+
+        // Define that we have the intention of opening MoreInfoNotification
+        Intent moreInfoIntent = new Intent(this, MoreInfoNotification.class);
+
+        // Used to stack tasks across activites so we go to the proper place when back is clicked
+        TaskStackBuilder tStackBuilder = TaskStackBuilder.create(this);
+
+        // Add all parents of this activity to the stack
+        tStackBuilder.addParentStack(MoreInfoNotification.class);
+
+        // Add our new Intent to the stack
+        tStackBuilder.addNextIntent(moreInfoIntent);
+
+        // Define an Intent and an action to perform with it by another application
+        // FLAG_UPDATE_CURRENT : If the intent exists keep it but update it if needed
+        PendingIntent pendingIntent = tStackBuilder.getPendingIntent(0,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Defines the Intent to fire when the notification is clicked
+        notificBuilder.setContentIntent(pendingIntent);
+
+        // Gets a NotificationManager which is used to notify the user of the background event
+        notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Post the notification
+        notificationManager.notify(notifID, notificBuilder.build());
+
+        // Used so that we can't stop a notification that has already been stopped
+        isNotificActive = true;
+
+
     }
 
     public interface BackendCallback {
@@ -82,10 +143,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         currUser = new User(0,0,0,"TempUserName");
-        currUser.addFriend((new User(43.068762, -89.408195, 1, "A")));
-        currUser.addFriend((new User(43.068619, -89.408314, 2, "B")));
-        currUser.addFriend((new User(43.068873, -89.408581, 3, "C")));
-        currUser.addFriend((new User(43.068317, -89.408142, 4, "D")));
+        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));
+        currUser.addFriend((new User(43.068619, -89.408314, 2, "Mike Fix")));
+        currUser.addFriend((new User(43.068873, -89.408581, 3, "Charlie")));
+        currUser.addFriend((new User(43.068317, -89.408142, 4, "Dave")));
 
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -210,6 +271,22 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap map) {
         map.setOnMarkerClickListener(this);
         map.setOnInfoWindowClickListener(this);
+        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.info_window, null);
+                TextView tv = (TextView) view.findViewById(R.id.infoWindowInformation);
+                tv.setText("Buz " + marker.getTitle());
+                Typeface face = Typeface.createFromAsset(getAssets(),"fonts/Aventura-Bold.otf");
+                tv.setTypeface(face);
+                return view;
+            }
+        });
         map.setMyLocationEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setZoomGesturesEnabled(false);

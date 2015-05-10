@@ -87,7 +87,7 @@ public class LoginActivity extends FragmentActivity {
         headers.add(new BasicHeader("Content-Type", "application/json"));
 
         //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
-
+        final LoginActivity loginActivity = this;
         //user path
         String userPath = "users/" + username + ".json";
         client.get(userPath, params, headers, new JsonResponseHandler() {
@@ -103,6 +103,7 @@ public class LoginActivity extends FragmentActivity {
                 });
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                loginActivity.finish();
             }
 
             public void onFailure() {
