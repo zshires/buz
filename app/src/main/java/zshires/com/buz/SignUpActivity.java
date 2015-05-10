@@ -1,9 +1,11 @@
 package zshires.com.buz;
 
 import android.app.Activity;
+import android.content.Context;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +43,11 @@ public class SignUpActivity extends Activity {
         String password = pass.getText().toString();
         String username = user.getText().toString();
 
+        TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String phonenumber = tMgr.getLine1Number();
+
+        Toast.makeText(this, phonenumber, Toast.LENGTH_SHORT);
+
         AsyncHttpClient client = new AsyncHttpClient(url);
         StringEntity jsonParams = null;
         List<NameValuePair> params = null;
@@ -49,6 +56,7 @@ public class SignUpActivity extends Activity {
                 //JSONObject json = new JSONObject();
                 params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("username", username));
+                params.add(new BasicNameValuePair("password", password));
                 //json.put("username", username);
                 //json.put("phonenumber", "2629021681");
                 //json.put("latitude", "333");
@@ -62,7 +70,7 @@ public class SignUpActivity extends Activity {
 
             List<Header> headers = new ArrayList<Header>();
             headers.add(new BasicHeader("Accept", "application/json"));
-            headers.add(new BasicHeader("Content-Type", "application/json"));
+            //headers.add(new BasicHeader("Content-Type", "application/json"));
 
             //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
 
