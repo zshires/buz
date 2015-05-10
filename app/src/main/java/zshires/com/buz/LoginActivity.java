@@ -99,7 +99,7 @@ public class LoginActivity extends FragmentActivity {
         headers.add(new BasicHeader("Content-Type", "application/json"));
 
         //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
-
+        final LoginActivity loginActivity = this;
         //user path
         String userPath = "users/" + username + ".json?password=" + password;
 
@@ -107,6 +107,7 @@ public class LoginActivity extends FragmentActivity {
         client.get(userPath, null, headers, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
+<<<<<<< HEAD
                 String result = String.valueOf(getContent());
                 Log.d("Test",String.valueOf(getContent()));
                 Log.d("Test",String.valueOf(getContent()));
@@ -131,8 +132,11 @@ public class LoginActivity extends FragmentActivity {
                     });
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    loginActivity.finish();
+
 
                 }//this is where end of else
+
             }
 
             public void onFailure() {
