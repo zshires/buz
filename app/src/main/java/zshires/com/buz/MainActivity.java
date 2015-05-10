@@ -142,11 +142,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        currUser = new User(0,0,0,"TempUserName");
-        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));
-        currUser.addFriend((new User(43.068619, -89.408314, 2, "Mike Fix")));
-        currUser.addFriend((new User(43.068873, -89.408581, 3, "Charlie")));
-        currUser.addFriend((new User(43.068317, -89.408142, 4, "Dave")));
+
+        currUser = (User) savedInstanceState.getSerializable("currUser");
+//        currUser = new User(0,0,0,"TempUserName");
+//        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));
+//        currUser.addFriend((new User(43.068619, -89.408314, 2, "Mike Fix")));
+//        currUser.addFriend((new User(43.068873, -89.408581, 3, "Charlie")));
+//        currUser.addFriend((new User(43.068317, -89.408142, 4, "Dave")));
 
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -389,7 +391,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 }
                 dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
                 //Push to server "me"
-                /*
+
+
+                //TODO this was commmented
                 updateLocation(currUser, new BackendCallback() {
                     @Override
                     public void onRequestCompleted(Object result) {
@@ -412,7 +416,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         Log.d("LoadUserError", message);
                     }
                 });
-                */
+
                     //TODO check if needs to be hereUser me = new User(latitude,longitude,1);
 
                 /* Populate the map with users friends*/

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import net.callumtaylor.asynchttp.AsyncHttpClient;
@@ -129,7 +131,13 @@ public class LoginActivity extends FragmentActivity {
                         }
 
                     });
+                    Log.d("Result", "Load returned: " + result);
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                    User user = gson.fromJson(result, User.class);
+                    Log.d("User:" ,user.toString());
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("currUser", user);
                     startActivity(intent);
                     loginActivity.finish();
 

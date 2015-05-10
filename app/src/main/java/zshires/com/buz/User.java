@@ -2,13 +2,14 @@ package zshires.com.buz;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Created by Michael on 4/18/2015.
  */
-public class User {
+public class User implements Serializable{
     private double latitude;
     private double longitude;
     private int id;

@@ -57,6 +57,7 @@ public class SignUpActivity extends Activity {
                 params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("username", username));
                 params.add(new BasicNameValuePair("password", password));
+                params.add(new BasicNameValuePair("phonenumber", phonenumber));
                 //json.put("username", username);
                 //json.put("phonenumber", "2629021681");
                 //json.put("latitude", "333");
