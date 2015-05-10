@@ -107,7 +107,6 @@ public class LoginActivity extends FragmentActivity {
         client.get(userPath, null, headers, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
-<<<<<<< HEAD
                 String result = String.valueOf(getContent());
                 Log.d("Test",String.valueOf(getContent()));
                 Log.d("Test",String.valueOf(getContent()));
