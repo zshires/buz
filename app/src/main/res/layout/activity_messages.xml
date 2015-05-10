@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="showNotification"/>
+        android:onClick="showNotification"
+        android:visibility="invisible"/>
 
     <Button
         android:layout_width="match_parent"
@@ -23,7 +24,8 @@
         android:layout_below="@+id/showNotificationBut"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="stopNotification"/>
+        android:onClick="stopNotification"
+        android:visibility="invisible"/>
 
     <Button
         android:layout_width="match_parent"
@@ -33,33 +35,19 @@
         android:layout_below="@+id/stopNotificationBut"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="setAlarm"/>
-
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/pNumEditText"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="164dp"
-        android:hint="Phone Number"
+        android:onClick="setAlarm"
         android:visibility="invisible"/>
+
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send"
         android:id="@+id/sendButton"
-        android:layout_alignBottom="@+id/pNumEditText"
-        android:layout_toRightOf="@+id/pNumEditText"
-        android:layout_toEndOf="@+id/pNumEditText"
-        android:layout_marginLeft="10dp"
         android:onClick="sendMessage"
-        android:visibility="invisible"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="match_parent"
@@ -67,14 +55,12 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/txtMsgEditText"
-        android:layout_below="@+id/sendButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:lines="5"
         android:hint="Message"
         android:longClickable="false"
-        android:layout_marginTop="10dp"
-        android:visibility="invisible">
+        android:layout_above="@+id/sendButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <requestFocus />
     </EditText>
 
@@ -83,12 +69,13 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
+        android:clickable="false"
+        android:editable="false"
         android:id="@+id/messagesEditText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/sendButton"
-        android:visibility="invisible"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/showNotificationBut"
+        android:layout_above="@+id/txtMsgEditText" />
 
 
 </RelativeLayout>

@@ -44,9 +44,9 @@ public class SignUpActivity extends Activity {
         String username = user.getText().toString();
 
         TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String phonenumber = tMgr.getLine1Number();
+        String phonenumber = "\"" + tMgr.getLine1Number() + "\"";
 
-        Toast.makeText(this, phonenumber, Toast.LENGTH_SHORT);
+        //Toast.makeText(this, phonenumber, Toast.LENGTH_SHORT);
 
         AsyncHttpClient client = new AsyncHttpClient(url);
         StringEntity jsonParams = null;

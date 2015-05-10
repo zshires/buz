@@ -1,16 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="zshires.com.buz.MessagesActivity">
+    tools:context=".FriendsActivity">
 
     <item android:id="@+id/action_home"
-        android:title="Home"
         android:icon="@drawable/ic_action_map"
-        app:showAsAction="ifRoom"
-        android:visible="true"/>
-
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:icon="@drawable/ic_action_settings"
+        android:title="Home"
         app:showAsAction="ifRoom"
         android:visible="true"/>
 
