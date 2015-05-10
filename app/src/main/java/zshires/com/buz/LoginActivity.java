@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
+import com.google.gson.JsonObject;
 
 import net.callumtaylor.asynchttp.AsyncHttpClient;
 import net.callumtaylor.asynchttp.response.JsonResponseHandler;
@@ -25,6 +26,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.List;
 public class LoginActivity extends FragmentActivity {
     private MainFragment mainFragment;
     String url = "https://still-journey-7705.herokuapp.com/";
+    String failString = "{\"result\":\"fail\"}";
 
 
     @Override
@@ -64,23 +67,32 @@ public class LoginActivity extends FragmentActivity {
         String username = user.getText().toString();
 
         AsyncHttpClient client = new AsyncHttpClient(url);
-        StringEntity jsonParams = null;
-        List<NameValuePair> params = null;
-        try {
-            //JSONObject json = new JSONObject();
-            params = new ArrayList<NameValuePair>();
-            //params.add(new BasicNameValuePair("username", username));
-            params.add(new BasicNameValuePair("password", password));
-            //json.put("username", username);
-            //json.put("phonenumber", "2629021681");
-            //json.put("latitude", "333");
-            //json.put("longitude", "444");
-            //jsonParams = new StringEntity(json.toString());
-            //Log.d(TAG, json.toString());
 
-        } catch (Exception e) {
+        /*StringEntity jsonParams = null;
+        try{
+            JSONObject json = new JSONObject();
+            json.put("password", password);
+            jsonParams = new StringEntity(json.toString());
+        }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
+
+//        List<NameValuePair> params = null;
+//        try {
+//            //JSONObject json = new JSONObject();
+//            params = new ArrayList<NameValuePair>();
+//            //params.add(new BasicNameValuePair("username", username));
+//            params.add(new BasicNameValuePair("password", password));
+//            //json.put("username", username);
+//            //json.put("phonenumber", "2629021681");
+//            //json.put("latitude", "333");
+//            //json.put("longitude", "444");
+//            //jsonParams = new StringEntity(json.toString());
+//            //Log.d(TAG, json.toString());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         List<Header> headers = new ArrayList<Header>();
         headers.add(new BasicHeader("Accept", "application/json"));
@@ -89,27 +101,45 @@ public class LoginActivity extends FragmentActivity {
         //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
 
         //user path
-        String userPath = "users/" + username + ".json";
-        client.get(userPath, params, headers, new JsonResponseHandler() {
+        String userPath = "users/" + username + ".json?password=" + password;
+
+        //TODO check if headers are necessary
+        client.get(userPath, null, headers, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
+                String result = String.valueOf(getContent());
+                Log.d("Test",String.valueOf(getContent()));
+                Log.d("Test",String.valueOf(getContent()));
 
-                });
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                if(result.equals(failString)){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Incorrect username or password", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+
+                    });
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                }//this is where end of else
             }
 
             public void onFailure() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Server Communication Error", Toast.LENGTH_SHORT);
                         toast.show();
                     }
 
