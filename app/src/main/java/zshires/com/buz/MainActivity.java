@@ -5,19 +5,24 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,6 +131,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     }
 
+
     public interface BackendCallback {
         public void onRequestCompleted(Object result);
         public void onRequestFailed(String message);
@@ -154,7 +160,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, ll);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, ll);
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
 
         /* Grab the map and initialize */
@@ -172,9 +178,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         });
 
         /* Initialize our user*/
-        /* Populate friends from backend
+        // Populate friends from backend
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        currUser = new User(latitude,longitude, prefs.getInt("idPref", 1));
+        //currUser = new User(latitude,longitude, prefs.getInt("idPref", 1));//TODO: update user location
         getFriends(currUser, new BackendCallback() {
             @Override
             public void onRequestCompleted(Object result) {
@@ -186,11 +192,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 Log.d("LoadUserError", message);
             }
         });
-        */
+
     }
 
     private void getFriends(User me , final BackendCallback callback) {
-        /* Backend call to get friends
+        // Backend call to get friends
         AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
 
         List<Header> headers = new ArrayList<Header>();
@@ -225,7 +231,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 callback.onRequestFailed(handleFailure(getContent()));
             }
         });
-        */
+
     }
 
     @Override
@@ -334,6 +340,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         client.put("users/" + me.getID() + ".json", jsonParams, null, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
+
                 JsonObject result = getContent().getAsJsonObject();
                 //JsonObject array = parser.parse(inputLine).getAsJsonArray();
                 //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
@@ -351,6 +358,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 Log.d("User:" ,user.toString());
 
                 callback.onRequestCompleted(user);
+
             }
 
             @Override
