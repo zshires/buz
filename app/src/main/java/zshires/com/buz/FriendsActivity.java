@@ -57,8 +57,9 @@ public class FriendsActivity extends ActionBarActivity {
 
     public void send_a_message(View v) {
         TextView theTextView = (TextView) v.findViewById(R.id.friendNameView);
-        Toast.makeText(getApplicationContext(), theTextView.getText(),
-                Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getBaseContext(), MessagesActivity.class);
+        intent.putExtra("nameOfRecipient",  theTextView.getText());
+        startActivity(intent);
     }
 
     @Override

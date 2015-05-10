@@ -1,5 +1,6 @@
 package zshires.com.buz;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,8 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.telephony.gsm.SmsMessage;
 import android.util.Log;
@@ -25,9 +26,11 @@ import java.util.GregorianCalendar;
 
 public class MessagesActivity extends ActionBarActivity {
 
-    EditText txtMsgEditText, pNumEditText, messagesEditText;
+String nameOfRecipient;
+    EditText txtMsgEditText, messagesEditText;
     Button sendButton;
     static String messages = "";
+    static String prevMsg = "";
     // Allows use to update the UI with new messages by telling the Activity
     // to update the UI every 5 seconds
     // A handler can schedule for code to execute at a set time in this Activities
@@ -37,7 +40,7 @@ public class MessagesActivity extends ActionBarActivity {
     Button showNotificationBut, stopNotificationBut, alertButton;
 
     // Allows us to notify the user that something happened in the background
-    NotificationManager notificationManager;
+   static NotificationManager notificationManager;
 
     // Used to track notifications
     int notifID = 33;
@@ -49,9 +52,12 @@ public class MessagesActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
+        stopNotification();
+
+        Intent intent = getIntent();
+        nameOfRecipient = intent.getStringExtra("nameOfRecipient");
 
         txtMsgEditText = (EditText) findViewById(R.id.txtMsgEditText);
-        pNumEditText = (EditText) findViewById(R.id.pNumEditText);
         messagesEditText = (EditText) findViewById(R.id.messagesEditText);
         sendButton = (Button) findViewById(R.id.sendButton);
 
@@ -68,12 +74,16 @@ public class MessagesActivity extends ActionBarActivity {
                 while (true) {
                     try {
                         // Wait 5 seconds and then execute the code in run()
-                        Thread.sleep(5000);
+                        Thread.sleep(3000);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 // Update the messagesEditText
                                 messagesEditText.setText(messages);
+                                if(prevMsg != messages){
+                                    showNotification();
+                                    prevMsg = messages;
+                                }
                             }
                         });
                     } catch (Exception ex) {
@@ -85,11 +95,10 @@ public class MessagesActivity extends ActionBarActivity {
     }
 
     public void sendMessage(View view) {
-
         // Get the phone number and message to send
-        String phoneNum = pNumEditText.getText().toString();
+        //TODO: we have the user name, now get the phone number
+        String phoneNum = "4148078600";
         String message = txtMsgEditText.getText().toString();
-
         try{
 
             // Handles sending and receiving data and text
@@ -169,10 +178,9 @@ public class MessagesActivity extends ActionBarActivity {
                 Log.e("SmsReceiver", "Exception smsReceiver" +ex);
 
             }
-
         }
-
     }
+
 
     // Handles receiving MMS
     public class MMSReceiver extends BroadcastReceiver {
@@ -183,7 +191,6 @@ public class MessagesActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
 
             throw new UnsupportedOperationException("Not Implemented Yet");
-
         }
 
     }
@@ -208,58 +215,29 @@ public class MessagesActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_messages, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_home:
-                openHome();
-                return true;
-            case R.id.action_settings:
-                openSettings();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void openHome() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
     public void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    public void showNotification(View view) {
+    public void showNotification() {
 
         // Builds a notification
         NotificationCompat.Builder notificBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle("Message")
-                .setContentText("New Message")
+                .setContentTitle("New Message")
+                .setContentText("")
                 .setTicker("Alert New Message")
                 .setSmallIcon(R.drawable.ic_launcher);
 
         // Define that we have the intention of opening MoreInfoNotification
-        Intent moreInfoIntent = new Intent(this, MoreInfoNotification.class);
+        Intent moreInfoIntent = new Intent(this, MessagesActivity.class);
 
         // Used to stack tasks across activites so we go to the proper place when back is clicked
         TaskStackBuilder tStackBuilder = TaskStackBuilder.create(this);
 
         // Add all parents of this activity to the stack
-        tStackBuilder.addParentStack(MoreInfoNotification.class);
+        tStackBuilder.addParentStack(MainActivity.class);
+        tStackBuilder.addParentStack(FriendsActivity.class);
 
         // Add our new Intent to the stack
         tStackBuilder.addNextIntent(moreInfoIntent);
@@ -281,17 +259,17 @@ public class MessagesActivity extends ActionBarActivity {
 
         // Used so that we can't stop a notification that has already been stopped
         isNotificActive = true;
-
-
     }
 
-    public void stopNotification(View view) {
-
+    public void stopNotification() {
         // If the notification is still active close it
-        if(isNotificActive) {
+       // if(isNotificActive) {
+        try {
             notificationManager.cancel(notifID);
+        } catch (Exception e){
+            //must not have been a notification
         }
-
+       // }
     }
 
     public void setAlarm(View view) {
@@ -312,6 +290,27 @@ public class MessagesActivity extends ActionBarActivity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
                 PendingIntent.getBroadcast(this, 1, alertIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT));
-
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_messages, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                openHome();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void openHome() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }
