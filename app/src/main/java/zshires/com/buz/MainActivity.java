@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private final int RANGE = 60; //Distance in meters that controls how far you can see your friends
     private static User currUser;
     Circle mapCircle;
+    public static String password;
 
     // Allows us to notify the user that something happened in the background
     NotificationManager notificationManager;
@@ -144,6 +145,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         Intent i = getIntent();
+        password = i.getStringExtra("password");
         currUser = (User) i.getSerializableExtra("user");
 //        currUser = new User(0,0,0,"TempUserName");
 //        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));

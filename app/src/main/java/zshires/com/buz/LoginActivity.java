@@ -65,7 +65,7 @@ public class LoginActivity extends FragmentActivity {
     public void login(View view){
         EditText pass = (EditText)findViewById(R.id.password);
         EditText user = (EditText)findViewById(R.id.username);
-        String password = pass.getText().toString();
+        final String password = pass.getText().toString();
         String username = user.getText().toString();
 
         AsyncHttpClient client = new AsyncHttpClient(url);
@@ -111,7 +111,7 @@ public class LoginActivity extends FragmentActivity {
             public void onSuccess() {
                 String result = String.valueOf(getContent());
                 Log.d("Test",String.valueOf(getContent()));
-                Log.d("Test",String.valueOf(getContent()));
+                Log.d("Test", String.valueOf(getContent()));
 
                 if(result.equals(failString)){
                     runOnUiThread(new Runnable() {
@@ -144,6 +144,7 @@ public class LoginActivity extends FragmentActivity {
                     intent.putExtra("id", user.getID());
                     */
                     intent.putExtra("user",user);
+                    intent.putExtra("password", password);
                     startActivity(intent);
                     loginActivity.finish();
 
