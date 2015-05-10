@@ -33,6 +33,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+
 public class LoginActivity extends FragmentActivity {
     private MainFragment mainFragment;
     String url = "https://still-journey-7705.herokuapp.com/";
@@ -43,6 +46,15 @@ public class LoginActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "eArOXwN5rOCtS0mlykpVf96A4EFqVTz3tw6PAGfe", "VPOIyz24WSvZRQnIOc9mllhd4tNfvKJz0WChhFKc");
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+
+
 
         TextView tv = (TextView)findViewById(R.id.loginTitle);
         Typeface face = Typeface.createFromAsset(getAssets(),"fonts/Aventura-Bold.otf");

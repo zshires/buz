@@ -9,11 +9,32 @@
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-26cbb92d89eb90d5f7c717e0b7b29bb9f376e56c.jar" />
     </item>
     <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-c0783a087a621c7b45ab5c0199b3308d1a8b201e.jar" />
+    </item>
+    <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="055783146ba9654a725442563be78cad303aad1f">
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-f0776edf0326d30e7e1cdbe138c46b4d41573b7d.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-116465149083c8ac0592245ad5282fa5b27396fd.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-5c7fdd1f7aaaf8d57b88b43c43c0378397b557cc.jar" />
     </item>
     <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.0.0\classes.jar"
@@ -44,81 +65,18 @@
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\httpcore-4.2.4-01f81900e8bd76804cac3605d2db45db9a4abda8.jar" />
     </item>
     <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-7b7d8f99158652833183996b60cc68313d93c402.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpmime\4.2.5\412b9914d0adec6d5716df1ada8acbc4f6f2dd37\httpmime-4.2.5.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="412b9914d0adec6d5716df1ada8acbc4f6f2dd37">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\httpmime-4.2.5-44dae7cd32c214c7cf092c898838bcad3c91b412.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-e19a88df43db55208a3702e341b0b889f99c2ee2.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-fef3f74b88f04d6ea26d02fadc81a845ffae203e.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-5be338d30a79ae92b18a47ec19135b9f7085f0f0.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-51996dcbde854c35c054b6515b5597853ab4b6e3.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-c0783a087a621c7b45ab5c0199b3308d1a8b201e.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-116465149083c8ac0592245ad5282fa5b27396fd.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-5c7fdd1f7aaaf8d57b88b43c43c0378397b557cc.jar" />
-    </item>
-    <item
-        jar="C:\Users\zshires\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.1.2\91c20388c9a45f62b5ed8fe0502bb76ff6251fc7\bolts-android-1.1.2.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7">
-        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\bolts-android-1.1.2-40979cdba1208ef491e3340ec90ce714d16d12b4.jar" />
-    </item>
-    <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-f1d89f3ccafd46766717eac8473406f1466fde2c.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-7b7d8f99158652833183996b60cc68313d93c402.jar" />
     </item>
     <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.0.0\classes.jar"
@@ -149,11 +107,32 @@
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-aae16c953d4ba001abc1418e099721a81e963532.jar" />
     </item>
     <item
+        jar="C:\Users\zshires\.gradle\caches\modules-2\files-2.1\org.apache.httpcomponents\httpmime\4.2.5\412b9914d0adec6d5716df1ada8acbc4f6f2dd37\httpmime-4.2.5.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="412b9914d0adec6d5716df1ada8acbc4f6f2dd37">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\httpmime-4.2.5-44dae7cd32c214c7cf092c898838bcad3c91b412.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-e19a88df43db55208a3702e341b0b889f99c2ee2.jar" />
+    </item>
+    <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-d6153abef87fe5957c1888d07107e4d41fef88fa.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-fef3f74b88f04d6ea26d02fadc81a845ffae203e.jar" />
     </item>
     <item
         jar="C:\Users\zshires\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
@@ -163,11 +142,25 @@
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\gson-2.3.1-4bc25401480731b5fab71ad5e3a6bb82f9ebe1f2.jar" />
     </item>
     <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-5be338d30a79ae92b18a47ec19135b9f7085f0f0.jar" />
+    </item>
+    <item
         jar="C:\Users\zshires\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\support-annotations-22.0.0-f01ec94dc5bb43eef13a60a8ab2f5c42231524b2.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.2.0\6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd\bolts-android-1.2.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\bolts-android-1.2.0-1c90e0abee777746fdb9b344e13012366021408d.jar" />
     </item>
     <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.0.0\classes.jar"
@@ -198,11 +191,25 @@
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-3ea9c09132539dd7c58bbaa4f59832131e73d562.jar" />
     </item>
     <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-51996dcbde854c35c054b6515b5597853ab4b6e3.jar" />
+    </item>
+    <item
         jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.0.0\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
         <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\classes-c8a3a27bc3d8603f5d9f699ebb46179c3084a645.jar" />
+    </item>
+    <item
+        jar="C:\Users\zshires\Desktop\NewBuz2\buz\app\libs\Parse-1.9.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1b065010f3c9d441ede9078aca8eabcd1c81e647">
+        <dex dex="C:\Users\zshires\Desktop\NewBuz2\buz\app\build\intermediates\pre-dexed\debug\Parse-1.9.1-64494993e174adf1759d5186d3bbd89a345f7999.jar" />
     </item>
 
 </items>
