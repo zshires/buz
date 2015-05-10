@@ -14,14 +14,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="30sp"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:onClick="send_a_message"
+                android:clickable="true"/>
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="15dp"
             android:src="@drawable/check"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>

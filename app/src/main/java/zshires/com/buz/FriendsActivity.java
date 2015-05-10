@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -52,6 +53,12 @@ public class FriendsActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    public void send_a_message(View v) {
+        TextView theTextView = (TextView) v.findViewById(R.id.friendNameView);
+        Toast.makeText(getApplicationContext(), theTextView.getText(),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
