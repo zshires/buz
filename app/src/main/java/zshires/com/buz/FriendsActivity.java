@@ -32,6 +32,14 @@ public class FriendsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        View view = getWindow().getDecorView().findViewById(android.R.id.content);
+        view.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {
+                finish();
+            }
+        });
+
         ArrayList<User> friendList = MainActivity.getCurrUser().getFriends();
         ListAdapter theAdapter = new FriendAdapter(this, friendList);
         ListView theListView = (ListView) findViewById(R.id.friendsList);

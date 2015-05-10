@@ -206,8 +206,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         headers.add(new BasicHeader("Content-Type", "application/json"));
         //headers.add(new BasicHeader("X-USER-ID", Integer.toString(user.backendId)));
         //headers.add(new BasicHeader("X-AUTHENTICATION-TOKEN", user.authToken));
-
-        client.get("users/" + me.getID(), null, headers, new JsonResponseHandler() {
+        String userPath = "users/" + me.getName() + ".json?password=" + password;
+        client.get(userPath, null, headers, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
                 JsonObject result = getContent().getAsJsonObject();
@@ -339,7 +339,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }catch (Exception e){
             Log.d("Error:" ,"Exception thrown in updateLocation");
         }
-        client.put("users/" + me.getID() + ".json", jsonParams, null, new JsonResponseHandler() {
+        String userPath = "users/" + me.getName() + ".json?password=" + password;
+        client.put(userPath, jsonParams, null, new JsonResponseHandler() {
             @Override
             public void onSuccess() {
 

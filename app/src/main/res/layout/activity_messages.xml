@@ -71,6 +71,7 @@
         android:ems="10"
         android:clickable="false"
         android:editable="false"
+        android:enabled="false"
         android:id="@+id/messagesEditText"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

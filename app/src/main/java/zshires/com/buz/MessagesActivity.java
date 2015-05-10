@@ -67,13 +67,6 @@ String nameOfRecipient;
         alertButton = (Button) findViewById(R.id.alertButton);
 
 
-        View view = getWindow().getDecorView().findViewById(android.R.id.content);
-        view.setOnTouchListener(new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeRight() {
-                finish();
-            }
-        });
         // Thread updates the messages EditText every 10 seconds
         new Thread(new Runnable() {
             @Override
