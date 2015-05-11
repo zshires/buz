@@ -73,6 +73,42 @@ public class FriendsActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(R.layout.activity_friends);
+
+        View view = getWindow().getDecorView().findViewById(android.R.id.content);
+        view.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {
+                finish();
+            }
+        });
+
+        ArrayList<User> friendList = MainActivity.getCurrUser().getFriends();
+        ListAdapter theAdapter = new FriendAdapter(this, friendList);
+        ListView theListView = (ListView) findViewById(R.id.friendsList);
+        theListView.setAdapter(theAdapter);
+
+
+        theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User myFriend = (User) parent.getItemAtPosition(position);
+                if(!friendsToRemove.contains(myFriend)) {
+                    friendsToRemove.add(myFriend);
+                    ImageView img = (ImageView) view.findViewById(R.id.imageView1);
+                    img.setImageResource(R.drawable.close);
+                } else {
+                    friendsToRemove.remove(myFriend);
+                    ImageView img = (ImageView) view.findViewById(R.id.imageView1);
+                    img.setImageResource(R.drawable.check);
+                }
+            }
+        });
+    }
+
 
     public void send_a_message(View v) {
         TextView theTextView = (TextView) v.findViewById(R.id.friendNameView);

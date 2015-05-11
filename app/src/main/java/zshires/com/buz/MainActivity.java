@@ -170,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, ll);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, ll);
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
 
         /* Grab the map and initialize */
