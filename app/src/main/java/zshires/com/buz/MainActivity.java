@@ -47,7 +47,10 @@ import java.util.ArrayList;
 import com.google.gson.*;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -113,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .setSmallIcon(R.drawable.ic_launcher);
 
         // Define that we have the intention of opening MoreInfoNotification
-        Intent moreInfoIntent = new Intent(this, MoreInfoNotification.class);
+        Intent moreInfoIntent = new Intent(this, MessagesActivity.class);
 
         // Used to stack tasks across activites so we go to the proper place when back is clicked
         TaskStackBuilder tStackBuilder = TaskStackBuilder.create(this);
@@ -392,13 +395,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 }
 
                 /* Populate the map with users friends*/
-                Log.e("Debug", "trying to populate");
                     if (currUser != null && currUser.getFriends() != null) {
-                        Log.e("Debug", "populate 2");
                         for (User friend : currUser.getFriends()) {
-                            Log.e("Debug", "going throught the friends");
                             if (friend != null && friend.isInRange(currUser, RANGE)) {
-                                Log.e("Debug", "adding markers to map");
                                 dummyMarkers.add(addMapMarker(gmap, friend.getLatitude(), friend.getLongitude(), friend.getName()));
                             }
                         }

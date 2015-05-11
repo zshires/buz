@@ -36,32 +36,23 @@ import java.util.List;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class LoginActivity extends FragmentActivity {
     private MainFragment mainFragment;
     public ParseUser user;
-    String url = "https://still-journey-7705.herokuapp.com/";
-    String failString = "{\"result\":\"fail\"}";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "eArOXwN5rOCtS0mlykpVf96A4EFqVTz3tw6PAGfe", "VPOIyz24WSvZRQnIOc9mllhd4tNfvKJz0WChhFKc");
-
-
-    //save test obj
-        //ParseObject testObject = new ParseObject("TestObject");
-        //testObject.put("foo", "bar");
-        //testObject.saveInBackground();
-
-
 
         TextView tv = (TextView)findViewById(R.id.loginTitle);
         Typeface face = Typeface.createFromAsset(getAssets(),"fonts/Aventura-Bold.otf");
