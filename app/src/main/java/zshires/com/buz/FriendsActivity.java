@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +17,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by zshires on 5/9/2015.
@@ -63,6 +73,7 @@ public class FriendsActivity extends ActionBarActivity {
         });
     }
 
+
     public void send_a_message(View v) {
         TextView theTextView = (TextView) v.findViewById(R.id.friendNameView);
         Intent intent = new Intent(getBaseContext(), MessagesActivity.class);
@@ -73,11 +84,31 @@ public class FriendsActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        final ArrayList<String> friendsToRemoveNames = new ArrayList<String>();
+
         for(User u : friendsToRemove){
-            currUser.removeFriend(u);
+            friendsToRemoveNames.add(u.getName());
         }
-        friendsToRemove.clear();
+
+        for(String del : friendsToRemoveNames){
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
+            query.whereEqualTo("username1", currUser.getName());
+            query.whereEqualTo("username2", del);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                    if (e == null) {
+                        for(ParseObject p : parseObjects) {
+                           p.deleteInBackground();
+                        }
+                    } else {
+                        Log.d("Error", "Error: " + e.getMessage());
+                    }
+                }
+            });
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

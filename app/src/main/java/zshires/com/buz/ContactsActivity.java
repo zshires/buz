@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.nfc.Tag;
 import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -17,6 +18,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import net.callumtaylor.asynchttp.AsyncHttpClient;
 import net.callumtaylor.asynchttp.response.JsonResponseHandler;
 
@@ -25,8 +32,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ContactsActivity extends Activity {
@@ -53,40 +64,49 @@ public class ContactsActivity extends Activity {
         theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactTuple contact = (ContactTuple) parent.getItemAtPosition(position);
-                String inviteNotif = "Invitation sent to " + contact.name;
-                String yourName = currUser.getName();
-                sendMessage("4148078600", yourName + " wants to add you to Buz! Download Buz on the Play Store to join the Hive!");
-                Toast.makeText(ContactsActivity.this, inviteNotif, Toast.LENGTH_SHORT).show();
+                final ContactTuple contact = (ContactTuple) parent.getItemAtPosition(position);
+                final String inviteNotif = "Invitation sent to " + contact.name;
+
+
+                ParseObject gameScore = new ParseObject("Friends");
+                gameScore.put("username1", ParseUser.getCurrentUser().getUsername());
+                gameScore.put("username2", contact.name);
+                gameScore.saveInBackground();
+                Toast.makeText(ContactsActivity.this, "Adding  " + contact.name + " to your network of friends", Toast.LENGTH_SHORT).show();
+/*
+                //look in our user table to see if they exist
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+                query.whereEqualTo("username", contact.name);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                        boolean foundUser = false;
+                        if (e == null) {
+
+
+                                    Toast.makeText(ContactsActivity.this, "Adding  " + contact.name + " toy our network of friends", Toast.LENGTH_SHORT).show();
+
+                                    ParseObject newFriend = new ParseObject("Friendz");
+                                    newFriend.put(currUser.getName(), contact.name);
+                                    newFriend.saveInBackground();
+
+                                    foundUser = true;
+
+
+
+                            if(!foundUser){
+                                Toast.makeText(ContactsActivity.this, "Sending an invitation to " + contact.name, Toast.LENGTH_SHORT).show();
+                                //TODO send sms to that contact
+                            }
+                        } else {
+
+                        }
+                    }
+                });
+*/
 
                 ImageView img = (ImageView) view.findViewById(R.id.imageView1);
                 img.setImageResource(R.drawable.ios7_plus_grey);
-
-                /*
-                AsyncHttpClient client = new AsyncHttpClient(url);
-                List<Header> headers = new ArrayList<Header>();
-                headers.add(new BasicHeader("Accept", "application/json"));
-                headers.add(new BasicHeader("Content-Type", "application/json"));
-
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("phonenumber", contact.number));
-
-                client.post("users/" + currUser.getID() + ".json", params, headers, new JsonResponseHandler() {
-                    @Override
-                    public void onSuccess() {
-                        //TODO make view above final, will that work?
-                        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
-                        img.setImageResource(R.drawable.ios7_plus_grey);
-                    }
-
-                    @Override
-                    public void onFailure() {
-                        //TODO make view above final, will that work?
-                        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
-                        img.setImageResource(R.drawable.check);
-                    }
-                });
-                */
             }
         });
     }
@@ -138,28 +158,6 @@ public class ContactsActivity extends Activity {
         adapter.notifyDataSetChanged();
     }
 
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_contacts, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     public class ContactTuple{
         public String name;

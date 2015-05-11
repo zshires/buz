@@ -30,14 +30,18 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 public class LoginActivity extends FragmentActivity {
     private MainFragment mainFragment;
+    public ParseUser user;
     String url = "https://still-journey-7705.herokuapp.com/";
     String failString = "{\"result\":\"fail\"}";
 
@@ -50,9 +54,12 @@ public class LoginActivity extends FragmentActivity {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "eArOXwN5rOCtS0mlykpVf96A4EFqVTz3tw6PAGfe", "VPOIyz24WSvZRQnIOc9mllhd4tNfvKJz0WChhFKc");
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
+
+
+    //save test obj
+        //ParseObject testObject = new ParseObject("TestObject");
+        //testObject.put("foo", "bar");
+        //testObject.saveInBackground();
 
 
 
@@ -76,119 +83,23 @@ public class LoginActivity extends FragmentActivity {
 
     public void login(View view){
         EditText pass = (EditText)findViewById(R.id.password);
-        EditText user = (EditText)findViewById(R.id.username);
+        EditText userName = (EditText)findViewById(R.id.username);
         final String password = pass.getText().toString();
-        String username = user.getText().toString();
+        String username = userName.getText().toString();
 
-        AsyncHttpClient client = new AsyncHttpClient(url);
-
-        /*StringEntity jsonParams = null;
-        try{
-            JSONObject json = new JSONObject();
-            json.put("password", password);
-            jsonParams = new StringEntity(json.toString());
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
-
-//        List<NameValuePair> params = null;
-//        try {
-//            //JSONObject json = new JSONObject();
-//            params = new ArrayList<NameValuePair>();
-//            //params.add(new BasicNameValuePair("username", username));
-//            params.add(new BasicNameValuePair("password", password));
-//            //json.put("username", username);
-//            //json.put("phonenumber", "2629021681");
-//            //json.put("latitude", "333");
-//            //json.put("longitude", "444");
-//            //jsonParams = new StringEntity(json.toString());
-//            //Log.d(TAG, json.toString());
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-        headers.add(new BasicHeader("Content-Type", "application/json"));
-
-        //client.post("users.json", jsonParams, headers,new JsonResponseHandler() {
-        final LoginActivity loginActivity = this;
-        //user path
-        String userPath = "users/" + username + ".json?password=" + password;
-
-        //TODO check if headers are necessary
-        client.get(userPath, null, headers, new JsonResponseHandler() {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
-            public void onSuccess() {
-                String result = String.valueOf(getContent());
-                Log.d("Test",String.valueOf(getContent()));
-                Log.d("Test", String.valueOf(getContent()));
-
-                if(result.equals(failString)){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Incorrect username or password", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-
-                    });
+            public void done(ParseUser parseUser, com.parse.ParseException e) {
+                if (parseUser != null) {
+                    // Hooray! The user is logged in.
+                    Toast.makeText(LoginActivity.this, "Success!.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-
-                    });
-                    Log.d("Result", "Load returned: " + result);
-                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-                    User user = gson.fromJson(result, User.class);
-                    Log.d("User:" ,user.toString());
-
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    /*
-                    intent.putExtra("username", user.getName());
-                    intent.putExtra("phonenumber", user.getPhonenumber());
-                    intent.putExtra("friends",user.getFriends());
-                    intent.putExtra("id", user.getID());
-                    */
-                    intent.putExtra("user",user);
-                    intent.putExtra("password", password);
-                    startActivity(intent);
-                    loginActivity.finish();
-
-
-                }//this is where end of else
-
-            }
-
-            public void onFailure() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Server Communication Error", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-
-                });
+                    Toast.makeText(LoginActivity.this, "Login failed, try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        /*try {
-            EditText name = (EditText) findViewById(R.id.username);
-            Integer idPref = Integer.parseInt(name.getText().toString());
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            prefs.edit().putInt("idPref", idPref).apply();
-
-        }catch (Exception e){
-            Log.e("Login Activity", "login button error");}
-        finally {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }*/
     }
 
     public void forgotPassword(View view){

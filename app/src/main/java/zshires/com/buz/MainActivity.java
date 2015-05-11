@@ -39,10 +39,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 
 import com.google.gson.*;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import net.callumtaylor.asynchttp.AsyncHttpClient;
 import net.callumtaylor.asynchttp.response.JsonResponseHandler;
 import org.apache.http.Header;
@@ -51,6 +60,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -63,6 +73,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static User currUser;
     Circle mapCircle;
     public static String password;
+    public ParseUser currDBUser;
+    public HashMap<String, User> allUsers = new HashMap<String, User>();
+    public ArrayList<String> myfriendsNames = new ArrayList<String>();
 
     // Allows us to notify the user that something happened in the background
     NotificationManager notificationManager;
@@ -149,20 +162,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        currDBUser = ParseUser.getCurrentUser();
         Intent i = getIntent();
         password = i.getStringExtra("password");
-        currUser = (User) i.getSerializableExtra("user");
-//        currUser = new User(0,0,0,"TempUserName");
-//        currUser.addFriend((new User(43.068762, -89.408195, 1, "Zak Shires")));
-//        currUser.addFriend((new User(43.068619, -89.408314, 2, "Mike Fix")));
-//        currUser.addFriend((new User(43.068873, -89.408581, 3, "Charlie")));
-//        currUser.addFriend((new User(43.068317, -89.408142, 4, "Dave")));
+        currUser = new User(0,0,0,currDBUser.getString("username"));
 
         /* Start Grabbing your current location */
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener ll = new myLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, ll);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, ll);
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
 
         /* Grab the map and initialize */
@@ -170,70 +178,64 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         map.getMapAsync(this);
         gmap  = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
-
-        /* Swipe Listener
-        view.setOnTouchListener(new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeLeft() {
-                openMessages();
-            }
-        });
-
-        /* Initialize our user*/
-        // Populate friends from backend
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //currUser = new User(latitude,longitude, prefs.getInt("idPref", 1));//TODO: update user location
-        getFriends(currUser, new BackendCallback() {
-            @Override
-            public void onRequestCompleted(Object result) {
-                currUser = (User) result;
-            }
-
-            @Override
-            public void onRequestFailed(String message) {
-                Log.d("LoadUserError", message);
-            }
-        });
+            updateClientUserMap();
 
     }
 
-    private void getFriends(User me , final BackendCallback callback) {
-        // Backend call to get friends
-        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+    public void updateClientUserMap(){
 
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-        headers.add(new BasicHeader("Content-Type", "application/json"));
-        //headers.add(new BasicHeader("X-USER-ID", Integer.toString(user.backendId)));
-        //headers.add(new BasicHeader("X-AUTHENTICATION-TOKEN", user.authToken));
-        String userPath = "users/" + me.getName() + ".json?password=" + password;
-        client.get(userPath, null, headers, new JsonResponseHandler() {
-            @Override
-            public void onSuccess() {
-                JsonObject result = getContent().getAsJsonObject();
-                //JsonObject array = parser.parse(inputLine).getAsJsonArray();
-                //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
 
-               // for (JsonElement element: result) {
-               //     JsonObject casted = element.getAsJsonObject();
-               //     casted.addProperty("backendId", casted.get("id").toString());
-               //     casted.remove("id");
-               // }
-
-                Log.d(TAG, "Load returned: " + result);
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-                User user = gson.fromJson(result, User.class);
-                Log.d("User:" ,user.toString());
-
-                callback.onRequestCompleted(user);
-            }
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
+        query.whereEqualTo("username1", currUser.getName());
+        query.findInBackground(new FindCallback<ParseObject>() {
 
             @Override
-            public void onFailure() {
-                callback.onRequestFailed(handleFailure(getContent()));
+            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                if (e == null) {
+                   for(ParseObject p : parseObjects){
+                      myfriendsNames.add(p.getString("username2"));
+                   }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
             }
         });
 
+
+        /*
+        try {
+        //allUsers.clear();
+        //look in our user table to see if they exist
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                try {
+                    if (e == null) {
+                        for (ParseObject u : parseObjects) {
+                            boolean contains = false;
+                            String uName = u.getString("username").trim();
+                            Double uLat = Double.parseDouble(u.getString("lat").trim());
+                            Double uLon = Double.parseDouble(u.getString("lon").trim());
+                            User use = new User(uLat, uLon, 0, uName);
+                            //check for containment
+                            for (String x : allUsers.keySet()) {
+                                if (x.equals(uName)) {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (!contains) allUsers.put(uName, use);
+                        }
+                    }
+                } catch (Exception ex) {
+                    Log.e("update", "update client fail");
+                }
+            }
+        });
+        } catch (Exception e) {Log.e("update","update client fail");}
+
+        */
     }
 
     @Override
@@ -323,55 +325,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         return true;
     }
 
-    public void updateLocation(User me, final BackendCallback callback){
-        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-        headers.add(new BasicHeader("Content-Type", "application/json"));
-        //headers.add(new BasicHeader("X-USER-ID", Integer.toString(user.backendId)));
-        //headers.add(new BasicHeader("X-AUTHENTICATION-TOKEN", user.authToken));
-        StringEntity jsonParams = null;
-        try{
-            JSONObject json = new JSONObject();
-            json.put("latitude", currUser.getLatitude());
-            json.put("longitude", currUser.getLongitude());
-            jsonParams = new StringEntity(json.toString());
-        }catch (Exception e){
-            Log.d("Error:" ,"Exception thrown in updateLocation");
-        }
-        String userPath = "users/" + me.getName() + ".json?password=" + password;
-        client.put(userPath, jsonParams, null, new JsonResponseHandler() {
-            @Override
-            public void onSuccess() {
-
-                JsonObject result = getContent().getAsJsonObject();
-                //JsonObject array = parser.parse(inputLine).getAsJsonArray();
-                //Sugar and GSON don't play nice, need to ensure the ID property is mapped correctly
-                /*
-                for (JsonElement element: result) {
-                    JsonObject casted = element.getAsJsonObject();
-                    casted.addProperty("backendId", casted.get("id").toString());
-                    casted.remove("id");
-                }*/
-
-                Log.d(TAG, "Load returned: " + result);
-
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-                User user = gson.fromJson(result, User.class);
-                Log.d("User:" ,user.toString());
-
-                callback.onRequestCompleted(user);
-
-            }
-
-            @Override
-            public void onFailure() {
-                callback.onRequestFailed(handleFailure(getContent()));
-            }
-        });
-
-    }
-
 
     class myLocationListener implements LocationListener {
         ArrayList<Marker> dummyMarkers = new ArrayList<Marker>();
@@ -382,68 +335,81 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 /* Update coordinates for our user */
                 currUser.setLatitude(location.getLatitude());
                 currUser.setLongitude(location.getLongitude());
+
+                //update my location on backend
+                ParseObject point = ParseObject.createWithoutData("_User", currDBUser.getObjectId());
+                point.put("lat", Double.toString(currUser.getLatitude()));
+                point.put("lon", Double.toString(currUser.getLongitude()));
+                point.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(com.parse.ParseException e) {
+                        if (e == null) {
+                            //updated location on server
+                        } else {
+                            Log.e("LocationUpdateonserver", "Fail");
+                        }
+                    }
+                });
+
+                //map stuff
                 LatLng loc = new LatLng(currUser.getLatitude(), currUser.getLongitude());
                 gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 18)); // have the map follow the user as they move
-                if(mapCircle != null){
+                if (mapCircle != null) {
                     mapCircle.remove(); // clear the old circles on the map
                 }
                 mapCircle = gmap.addCircle(new CircleOptions().center(loc).radius(RANGE).strokeColor(Color.YELLOW).strokeWidth(4).visible(true));
-               /* try{
-                if(initialZoom) {
-                    GoogleMap gmap2 = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-                    gmap2.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
-                    gmap2.animateCamera(CameraUpdateFactory.zoomIn());
-                    initialZoom = false;
-                } } catch (Exception e){}
-                */
-                for(Marker dummy : dummyMarkers){
-                    if(dummy != null) {
+
+                //marker logic
+                for (Marker dummy : dummyMarkers) {
+                    if (dummy != null) {
                         dummy.remove(); //remove all the old markers on the map
                     }
                 }
                 dummyMarkers.clear(); // get rid of these markers. we will add the updated ones later
-                //Push to server "me"
 
 
-                //TODO this was commmented
-                updateLocation(currUser, new BackendCallback() {
-                    @Override
-                    public void onRequestCompleted(Object result) {
-                        Log.d("Put", "Success");
-                    }
-
-                    @Override
-                    public void onRequestFailed(String message) {
-                        Log.e("Error", "Put failure");
-                    }
-                });
-                getFriends(currUser, new BackendCallback() {
-                    @Override
-                    public void onRequestCompleted(Object result) {
-                        currUser = (User) result;
-                    }
-
-                    @Override
-                    public void onRequestFailed(String message) {
-                        Log.d("LoadUserError", message);
-                    }
-                });
-
-                    //TODO check if needs to be hereUser me = new User(latitude,longitude,1);
-
-                /* Populate the map with users friends*/
-                    if (currUser != null && currUser.getFriends() != null){
-                        for (User friend : currUser.getFriends()){
-                            if (friend.isInRange(currUser,RANGE)) {
-                                dummyMarkers.add(addMapMarker(gmap,friend.getLatitude(),friend.getLongitude(), friend.getName()));
+                for(String friendName : myfriendsNames) {
+                    //grab the coords from the DB and add a new friend to currUser
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+                    query.whereEqualTo("username", friendName);
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                            if (e == null) {
+                                for(ParseObject p : parseObjects) {
+                                    String uName = p.getString("username").trim();
+                                    Double uLat = Double.parseDouble(p.getString("lat").trim());
+                                    Double uLon = Double.parseDouble(p.getString("lon").trim());
+                                    User use = new User(uLat, uLon, 0, uName);
+                                    currUser.addFriend(use);
+                                }
+                            } else {
+                                Log.d("Error", "Error: " + e.getMessage());
                             }
                         }
-                    }
-                    else
-                        Log.e("Null Error", "currUser is null or currUser.Friends is null");
+                    });
 
-            }
-        }
+                }
+
+                /* Populate the map with users friends*/
+                Log.e("Debug", "trying to populate");
+                    if (currUser != null && currUser.getFriends() != null) {
+                        Log.e("Debug", "populate 2");
+                        for (User friend : currUser.getFriends()) {
+                            Log.e("Debug", "going throught the friends");
+                            if (friend != null && friend.isInRange(currUser, RANGE)) {
+                                Log.e("Debug", "adding markers to map");
+                                dummyMarkers.add(addMapMarker(gmap, friend.getLatitude(), friend.getLongitude(), friend.getName()));
+                            }
+                        }
+                    } else
+                        Log.e("Null Error", "currUser is null or currUser.Friends is null");
+                }
+
+                updateClientUserMap();
+               }
+
+
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {

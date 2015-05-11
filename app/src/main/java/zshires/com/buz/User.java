@@ -70,7 +70,7 @@ public class User implements Serializable{
         return this.username;
     }
     public String getPhonenumber() { return this.phonenumber; }
-
+/*
     public String toString(){
         String myString = "" + username + " lat: " + latitude + " long: " + longitude + " friends: ";
         if (friends != null){
@@ -80,16 +80,36 @@ public class User implements Serializable{
         }
         return myString;
     }
-
+*/
     public void addFriend(User user){
-        this.friends.add(user);
+        boolean found = false;
+        if(user != null && user.getName() != "") {
+            //check to make sue its not alrdy in there
+            for(int i = 0; i < this.friends.size(); i++){
+                if(friends.get(i).getName().equals(user.getName())){
+                    found = true;
+                }
+            }
+            if(!found)
+                this.friends.add(user);
+        }
     }
+
     public void removeFriend(User user) {
+        for(int i = 0; i < this.friends.size(); i++){
+            if(friends.get(i).getName().equals(user.getName())){
+                friends.remove(i);
+            }
+        }
         if(friends.contains(user)){
             friends.remove(user);
         } else {
             Log.e("Warning", "Removing user not found");
         }
+    }
+
+    public void clearFriends(){
+        this.friends.clear();
     }
 
 
